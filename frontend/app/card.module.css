@@ -1,0 +1,21 @@
+.card {
+    padding-bottom: 32px;
+}
+
+.script {
+    vertical-align: bottom;
+    width: 800px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.output {
+    padding: 8px;
+    width: 800px;
+    border-radius: 4px;
+
+    background-color: gray;
+}

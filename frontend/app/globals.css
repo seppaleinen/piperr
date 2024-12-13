@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.button {
+  vertical-align: bottom;
+  background-color: #4299e1; /* Corresponds to bg-blue-500 */
+  color: white;             /* Corresponds to text-white */
+  font-weight: bold;        /* Corresponds to font-bold */
+  padding: 0.5rem 1rem;     /* Corresponds to py-2 px-4 */
+  border-radius: 0.25rem;   /* Corresponds to rounded */
+  transition: background-color 0.2s; /* For hover effect */
+}
+
+.button:hover {
+  background-color: #2b6cb0; /* Corresponds to hover:bg-blue-700 */
+}
+
