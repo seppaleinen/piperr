@@ -2,9 +2,14 @@
 import styles from './card.module.css';
 import { useState } from 'react';
 
-export default function Card({addToCardsAction, isLastStep}: { addToCardsAction: () => void, isLastStep: boolean }) {
-    const [script, setScript] = useState('#!/bin/bash');
-    const [output, setOutput] = useState('RESULT');
+export default function Card({addCardAction, isLastStep, index, removeCardAction}: {
+    addCardAction: () => void,
+    isLastStep: boolean,
+    index: number,
+    removeCardAction: (index: number) => void
+}) {
+    const [script, setScript] = useState<string>();
+    const [output, setOutput] = useState<string>();
 
     const executeScript = async () => {
         try {
@@ -21,6 +26,7 @@ export default function Card({addToCardsAction, isLastStep}: { addToCardsAction:
                 setOutput(errorData || 'Error executing script.');
             } else {
                 const data = await response.text();
+                console.log(data);
                 setOutput(data);
             }
         } catch (error) {
@@ -29,11 +35,22 @@ export default function Card({addToCardsAction, isLastStep}: { addToCardsAction:
     };
 
     const addSteppy = (isLastStep: boolean) => {
-        if(isLastStep) {
-            return <button onClick={addToCardsAction}
-                    className={"button"}>
+        if (isLastStep) {
+            return <button onClick={addCardAction}
+                           className={"button"}>
                 Add step
             </button>
+        } else {
+            return <button onClick={() => {removeCardAction(index);}}
+                           className={"button"}>
+                Remove step
+            </button>
+        }
+    }
+
+    const conditionalOutput = () => {
+        if (output) {
+            return <div className={styles.output}>{output}</div>
         }
     }
     return (
@@ -48,7 +65,7 @@ export default function Card({addToCardsAction, isLastStep}: { addToCardsAction:
                 className={"button"}>
                 Execute step
             </button>
-            <div className={styles.output}>{output}</div>
+            {conditionalOutput()}
             {addSteppy(isLastStep)}
         </div>
     );

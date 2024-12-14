@@ -5,12 +5,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #4299e1;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #4299e1;
   }
 }
 
@@ -22,12 +24,14 @@ body {
 
 .button {
   vertical-align: bottom;
-  background-color: #4299e1; /* Corresponds to bg-blue-500 */
+  background-color: var(--primary); /* Corresponds to bg-blue-500 */
   color: white;             /* Corresponds to text-white */
   font-weight: bold;        /* Corresponds to font-bold */
   padding: 0.5rem 1rem;     /* Corresponds to py-2 px-4 */
   border-radius: 0.25rem;   /* Corresponds to rounded */
   transition: background-color 0.2s; /* For hover effect */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
 }
 
 .button:hover {

@@ -16,6 +16,9 @@
     padding: 8px;
     width: 800px;
     border-radius: 4px;
-
+    white-space: pre-wrap;
     background-color: gray;
+    display: inline-block;
+    float: left;
+    overflow-wrap: break-word;
 }
