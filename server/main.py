@@ -1,8 +1,10 @@
 import subprocess
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
+from asgiref.wsgi import WsgiToAsgi
 
 app = Flask(__name__)
+asgi_app = WsgiToAsgi(app)
 cors = CORS(app) # allow CORS for all domains on all routes.
 app.config['CORS_HEADERS'] = 'Content-Type'
 

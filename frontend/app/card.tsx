@@ -1,72 +1,63 @@
 "use client";
 import styles from './card.module.css';
-import { useState } from 'react';
 
-export default function Card({addCardAction, isLastStep, index, removeCardAction}: {
-    addCardAction: () => void,
-    isLastStep: boolean,
-    index: number,
-    removeCardAction: (index: number) => void
+export default function Card({
+                                 index,
+                                 script,
+                                 output,
+                                 data,
+                                 addCardAction,
+                                 isLastStep,
+                                 removeCardAction,
+                                 updateCardScriptAction,
+                                 updateCardOutputAction
+                             }: {
+    index: number;
+    script: string;
+    output: string | null;
+    data: string | null;
+    addCardAction: () => void;
+    isLastStep: boolean;
+    removeCardAction: () => void;
+    updateCardScriptAction: (index: number, script: string) => void;
+    updateCardOutputAction: (index: number, output: string) => void;
 }) {
-    const [script, setScript] = useState<string>();
-    const [output, setOutput] = useState<string>();
-
     const executeScript = async () => {
         try {
-            const data = JSON.stringify({cmd: script});
-
+            const replacedData = data ? script.replace("{}", data) : script;
             const response = await fetch('http://localhost:5000/cmd', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: data,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cmd: script.replace("{}", replacedData) }),
             });
-
-            if (!response.ok) {
-                const errorData = await response.text();
-                setOutput(errorData || 'Error executing script.');
-            } else {
-                const data = await response.text();
-                console.log(data);
-                setOutput(data);
-            }
+            const result = await response.text();
+            updateCardOutputAction(index, result);
         } catch (error) {
-            setOutput('Error connecting to backend.' + error);
+            updateCardOutputAction(index, 'Error: ' + error);
         }
     };
 
-    const addSteppy = (isLastStep: boolean) => {
-        if (isLastStep) {
-            return <button onClick={addCardAction}
-                           className={"button"}>
-                Add step
-            </button>
-        } else {
-            return <button onClick={() => {removeCardAction(index);}}
-                           className={"button"}>
-                Remove step
-            </button>
-        }
-    }
-
-    const conditionalOutput = () => {
-        if (output) {
-            return <div className={styles.output}>{output}</div>
-        }
-    }
     return (
         <div className={styles.card}>
-            <textarea value={script}
-                      onChange={e => setScript(e.target.value)}
-                      className={styles.script}
-                      placeholder={"#!/bin/bash"}>
-            </textarea>
-            <button
-                onClick={executeScript}
-                className={"button"}>
+            <textarea
+                value={script}
+                onChange={(e) => updateCardScriptAction(index, e.target.value)}
+                className={styles.script}
+                placeholder="Enter script here..."
+            ></textarea>
+            <button onClick={executeScript} className="button">
                 Execute step
             </button>
-            {conditionalOutput()}
-            {addSteppy(isLastStep)}
+            {output && <div className={styles.output}>Output: {output}</div>}
+            {isLastStep ? (
+                <button onClick={addCardAction} className="button">
+                    Add step
+                </button>
+            ) : (
+                <button onClick={removeCardAction} className="button">
+                    Remove step
+                </button>
+            )}
         </div>
     );
 }

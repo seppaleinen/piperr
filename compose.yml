@@ -1,5 +1,7 @@
 services:
   frontend:
+    image: piperr-frontend
+    container_name: piperr-frontend
     build:
       context: frontend
       dockerfile: Dockerfile
@@ -21,7 +23,7 @@ services:
     container_name: piperr-server
     stop_signal: SIGINT
     ports:
-      - "5000:5000"
+      - "8000:8000"
     develop:
       watch:
         - action: rebuild

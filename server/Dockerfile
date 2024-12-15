@@ -10,13 +10,13 @@ WORKDIR /install
 
 RUN \
  apk update && \
- apk add --no-cache tzdata
+ apk add --no-cache tzdata uv
 
-ADD requirements.txt .
+ADD pyproject.toml .
 
-RUN pip3 install -r requirements.txt
+RUN uv pip install -r pyproject.toml --system
 
 ADD . /install
 
-ENTRYPOINT ["python3", "-m"]
-CMD ["flask", "--app", "main.py", "run", "--host=0.0.0.0"]
+ENTRYPOINT ["hypercorn"]
+CMD ["main:asgi_app", "--bind", "0.0.0.0:8000"]

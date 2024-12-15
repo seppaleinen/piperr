@@ -1,0 +1,12 @@
+[project]
+name = "piperr"
+version = "0.1.0"
+description = "Backend for running scripts"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask==3.1.0",         # Web framework
+    "flask-cors==5.0.0",    # Enables CORS
+    "hypercorn==0.17.3",    # ASGI web server
+    "asgiref==3.8.1",       # WSGI-to-ASGI adapter
+]
