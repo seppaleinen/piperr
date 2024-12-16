@@ -30,11 +30,18 @@ body {
   padding: 0.5rem 1rem;     /* Corresponds to py-2 px-4 */
   border-radius: 0.25rem;   /* Corresponds to rounded */
   transition: background-color 0.2s; /* For hover effect */
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
 
 }
 
-.button:hover {
+.button:not([disabled]):hover {
   background-color: #2b6cb0; /* Corresponds to hover:bg-blue-700 */
 }
 
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

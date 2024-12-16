@@ -5,51 +5,45 @@ export default function Card({
                                  index,
                                  script,
                                  output,
-                                 data,
                                  addCardAction,
                                  isLastStep,
                                  removeCardAction,
                                  updateCardScriptAction,
-                                 updateCardOutputAction
+                                 executeScriptAction,
+                                 loading
                              }: {
     index: number;
     script: string;
     output: string | null;
-    data: string | null;
     addCardAction: () => void;
     isLastStep: boolean;
     removeCardAction: () => void;
     updateCardScriptAction: (index: number, script: string) => void;
-    updateCardOutputAction: (index: number, output: string) => void;
+    executeScriptAction: () => Promise<void>;
+    loading: boolean;
 }) {
-    const executeScript = async () => {
-        updateCardOutputAction(index, '')
-        const outputs = []
-        for (const line of data ? data.trim().split('\n') : ['']) {
-            try {
-                const response = await fetch('http://localhost:8000/cmd', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cmd: script.replace('{}', line)}),
-                });
-                const result = await response.text();
-                outputs.push(result)
-            } catch (error) {
-                outputs.push('Error: ' + error)
-            }
-        }
-        updateCardOutputAction(index, outputs.join(''))
-    };
-
     return (
         <div className={styles.card}>
-            <textarea
-                value={script}
-                onChange={(e) => updateCardScriptAction(index, e.target.value)}
-                className={styles.script}
-                placeholder="Enter script here..."
-            ></textarea>
-            <button onClick={executeScript} className="button">
+            <div className={styles.outerScript}>
+                <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg"
+                     className={loading ? styles.showLoading : styles.hide}>
+                    <rect
+                        rx="8"
+                        ry="8"
+                        className={styles.line}
+                        height="100%"
+                        width="100%"
+                        strokeLinejoin="round"
+                    />
+                </svg>
+                <textarea
+                    value={script}
+                    onChange={(e) => updateCardScriptAction(index, e.target.value)}
+                    className={`${styles.script} ${loading || styles.showBorder}`}
+                    placeholder="Enter script here..."
+                ></textarea>
+            </div>
+            <button onClick={executeScriptAction} className={'button'} disabled={loading}>
                 Execute step
             </button>
             {output && <div className={styles.output}>{output}</div>}
@@ -58,7 +52,7 @@ export default function Card({
                     Add step
                 </button>
             ) : (
-                <button onClick={removeCardAction} className="button">
+                <button onClick={removeCardAction} className={`${styles.remove} button`}>
                     Remove step
                 </button>
             )}

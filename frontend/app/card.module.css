@@ -2,14 +2,50 @@
     padding-bottom: 32px;
 }
 
+.outerScript {
+    position: relative;
+}
+
+.outerScript svg {
+    position: absolute;
+}
+
+.line {
+    stroke-dasharray: 260;
+    stroke-width: 8px;
+    fill: transparent;
+    stroke: rgba(78, 255, 13, 0.3);
+    animation: svgAnimation 2.5s linear infinite;
+}
+
+.showLoading {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+@keyframes svgAnimation {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 1000;
+    }
+}
+
 .script {
     vertical-align: bottom;
-    width: 800px;
+    width: 100%;
+    padding: 8px;
+}
+
+.showBorder {
     border-style: solid;
     border-color: black;
-    border-width: 2px;
+    border-width: 1px;
     border-radius: 4px;
-    padding: 8px;
 }
 
 .output {
@@ -21,4 +57,9 @@
     display: inline-block;
     float: left;
     overflow-wrap: break-word;
+}
+
+.remove {
+    display: inline-block;
+    float: left;
 }
