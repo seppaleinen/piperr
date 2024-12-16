@@ -23,18 +23,22 @@ export default function Card({
     updateCardOutputAction: (index: number, output: string) => void;
 }) {
     const executeScript = async () => {
-        try {
-            const replacedData = data ? script.replace("{}", data) : script;
-            const response = await fetch('http://localhost:5000/cmd', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cmd: script.replace("{}", replacedData) }),
-            });
-            const result = await response.text();
-            updateCardOutputAction(index, result);
-        } catch (error) {
-            updateCardOutputAction(index, 'Error: ' + error);
+        updateCardOutputAction(index, '')
+        const outputs = []
+        for (const line of data ? data.trim().split('\n') : ['']) {
+            try {
+                const response = await fetch('http://localhost:8000/cmd', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cmd: script.replace('{}', line)}),
+                });
+                const result = await response.text();
+                outputs.push(result)
+            } catch (error) {
+                outputs.push('Error: ' + error)
+            }
         }
+        updateCardOutputAction(index, outputs.join(''))
     };
 
     return (
@@ -48,7 +52,7 @@ export default function Card({
             <button onClick={executeScript} className="button">
                 Execute step
             </button>
-            {output && <div className={styles.output}>Output: {output}</div>}
+            {output && <div className={styles.output}>{output}</div>}
             {isLastStep ? (
                 <button onClick={addCardAction} className="button">
                     Add step
