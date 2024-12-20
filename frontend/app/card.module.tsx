@@ -1,7 +1,7 @@
 "use client";
 import styles from './card.module.css';
 
-export default function Card({
+export default function CardModule({
                                  index,
                                  script,
                                  output,
@@ -10,7 +10,8 @@ export default function Card({
                                  removeCardAction,
                                  updateCardScriptAction,
                                  executeScriptAction,
-                                 loading
+                                 loading,
+                                 title
                              }: {
     index: number;
     script: string;
@@ -21,6 +22,7 @@ export default function Card({
     updateCardScriptAction: (index: number, script: string) => void;
     executeScriptAction: () => Promise<void>;
     loading: boolean;
+    title: string;
 }) {
     return (
         <div className={styles.card}>

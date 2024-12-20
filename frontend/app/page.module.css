@@ -1,5 +1,4 @@
 .main {
-    padding: clamp(16px, 2.4vw, 24px) clamp(24px, 5vw, 80px);
     display: flex;
     flex-direction: column;
     gap: 8px;

@@ -1,8 +1,13 @@
 "use client";
 import Hamburger from '@/app/hamburger.module';
 import { useState } from 'react';
+import { Workflow } from '@/app/page';
 
-export default function Header() {
+export default function Header({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
+    workflows: Workflow[],
+    chooseWorkflowAction: (title: string) => void,
+    createNewWorkflowAction: () => void
+}) {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
     const toggleHamburger = () => {
@@ -16,7 +21,16 @@ export default function Header() {
             </div>
             <div className={"navigation"}>
                 <ul>
-                    <li>Home</li>
+                    <li onClick={createNewWorkflowAction}>New Workflow</li>
+                    <hr/>
+                    {workflows
+                        .map((workflow, index) =>
+                            (
+                                <li key={index}
+                                    onClick={() => chooseWorkflowAction(workflow.title)}>{workflow.title}</li>
+                            )
+                        )
+                    }
                 </ul>
                 <div className={"hamburger"} onClick={toggleHamburger}>
                     <Hamburger isOpen={hamburgerOpen}/>
@@ -48,11 +62,6 @@ export default function Header() {
                     z-index: 100;
                 }
 
-                .navigation ul {
-                    flex-wrap: wrap;
-                    float: left;
-                }
-
                 .navigation ul li {
                     list-style-type: none;
                     font-weight: bolder;
@@ -60,30 +69,34 @@ export default function Header() {
                     color: var(--foreground); /* Ensure text is visible */
                     padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
                 }
-                
+
+                .navigation ul div {
+                    list-style-type: none;
+                    font-weight: bolder;
+                    font-size: 24px; /* Slightly larger text */
+                    color: var(--foreground); /* Ensure text is visible */
+                    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+                }
+
                 .navigation ul li:hover {
                     box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
                 }
 
                 .hamburger {
-                    display: none;
+                    display: block;
+                    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+                }
+
+                .navigation ul {
+                    display: ${hamburgerOpen ? 'inline' : 'none'};
+                    background-color: var(--primary);
+                    height: 100vh;
+                    width: 60vw;
+                    margin-top: 55px;
+                    position: fixed;
                 }
 
                 @media (max-width: 767px) {
-                    .hamburger {
-                        display: block;
-                        padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
-                    }
-
-                    .navigation ul {
-                        display: ${hamburgerOpen ? 'inline' : 'none'};
-                        background-color: var(--primary);
-                        height: 100vh;
-                        width: 60vw;
-                        margin-top: 55px;
-                        position: fixed;
-                    }
-                    
                     .navigation ul li:hover {
                         box-shadow: unset;
                     }
@@ -91,7 +104,6 @@ export default function Header() {
                     .navigation ul li:active {
                         box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
                     }
-
                 }
             `}</style>
         </div>

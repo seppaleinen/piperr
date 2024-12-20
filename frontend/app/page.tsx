@@ -1,90 +1,56 @@
 "use client";
-import Card from './card';
 import styles from './page.module.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import WorkflowModule from '@/app/workflow.module';
+import Header from '@/app/header';
+import Workflow from '@/app/workflow';
 
-export default function Home() {
-    const [cards, setCards] = useState<{ script: string; output: string | null; loading: boolean }[]>([
-        {script: '', output: null, loading: false}
-    ]);
+export default function Page() {
+    const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
+    const [workflowIndex, setWorkflowIndex] = useState(0);
 
-    const executeScript = async (index: number) => {
-        updateCardLoading(index, true);
-        updateCardOutput(index, '')
-        const outputs = []
-        const script = cards[index].script;
-        const data = index > 0 ? cards[index - 1].output : null;
-        for (const line of data ? data.trim().split('\n') : ['']) {
-            try {
-                const response = await fetch('http://localhost:8000/cmd', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({cmd: script.replace('{}', line)}),
-                });
-                const result = await response.text();
-                outputs.push(result)
-            } catch (error) {
-                outputs.push(`Error: ${error}`)
-            }
+    const setTitle = (title: string) => {
+        if(title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
+            const updatedWorkflows = [...workflows];
+            updatedWorkflows[workflowIndex].title = title;
+            setWorkflows(updatedWorkflows);
         }
-        updateCardOutput(index, outputs.join(''));
-        updateCardLoading(index, false);
-    };
+    }
 
+    const chooseWorkflow = (title: string) => {
+        workflows
+            .map((workflow, index) => {
+                if(workflow.title === title) {
+                    setWorkflowIndex(index);
+                }
+            });
+    }
 
-    const addCardAction = () => {
-        setCards([...cards, {script: '', output: null, loading: false}]);
-    };
-
-    const removeCardAction = (index: number) => {
-        const updatedCards = [...cards];
-        updatedCards.splice(index, 1);
-        setCards(updatedCards);
-    };
-
-    const updateCardScript = (index: number, script: string) => {
-        const updatedCards = [...cards];
-        updatedCards[index].script = script;
-        setCards(updatedCards);
-    };
-
-    const updateCardLoading = (index: number, loading: boolean) => {
-        const updatedCards = [...cards];
-        updatedCards[index].loading = loading;
-        setCards(updatedCards);
-    };
-
-    const updateCardOutput = (index: number, output: string) => {
-        const updatedCards = [...cards];
-        updatedCards[index].output = output;
-        setCards(updatedCards);
-    };
-
-    const executeAllScripts = async () => {
-        for (let i = 0; i < cards.length; i++) {
-            await executeScript(i);
+    const createNewWorkflowAction = () => {
+        if (workflows[workflows.length - 1].title.trim().length > 0) {
+            const index = workflows.push(new Workflow());
+            setWorkflowIndex(index - 1);
+        } else {
+            alert("Please enter a title for the current workflow before creating a new one.");
         }
+    }
+
+    const setWorkflowAction = (workflow: Workflow) => {
+        const updatedWorkflows = [...workflows];
+        updatedWorkflows[workflowIndex] = workflow;
+        setWorkflows(updatedWorkflows);
     }
 
     return (
         <div className={styles.main}>
-            {cards.map((card, index) => (
-                <Card
-                    key={index}
-                    index={index}
-                    script={card.script}
-                    output={card.output}
-                    loading={card.loading}
-                    isLastStep={cards.length === index + 1}
-                    addCardAction={addCardAction}
-                    removeCardAction={() => removeCardAction(index)}
-                    updateCardScriptAction={updateCardScript}
-                    executeScriptAction={() => executeScript(index)}
-                />
-            ))}
-            <button className="button" onClick={executeAllScripts}>
-                Execute all steps
-            </button>
+            <Header workflows={workflows}
+                    chooseWorkflowAction={chooseWorkflow}
+                    createNewWorkflowAction={createNewWorkflowAction}
+                    />
+            <WorkflowModule workflow={workflows[workflowIndex]}
+                            setTitleAction={setTitle}
+                            setWorkflowAction={setWorkflowAction}
+            />
         </div>
     );
 }
