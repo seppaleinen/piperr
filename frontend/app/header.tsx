@@ -1,7 +1,7 @@
 "use client";
 import Hamburger from '@/app/hamburger.module';
-import { useState } from 'react';
-import { Workflow } from '@/app/page';
+import { useEffect, useRef, useState } from 'react';
+import Workflow from '@/app/workflow';
 
 export default function Header({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
     workflows: Workflow[],
@@ -9,25 +9,61 @@ export default function Header({workflows, chooseWorkflowAction, createNewWorkfl
     createNewWorkflowAction: () => void
 }) {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
 
     const toggleHamburger = () => {
         setHamburgerOpen(!hamburgerOpen);
     }
 
+    const createNewWorkflowAndClose = () => {
+        createNewWorkflowAction();
+        setHamburgerOpen(false);
+    }
+
+    const chooseWorkflowAndClose = (title: string) => {
+        chooseWorkflowAction(title);
+        setHamburgerOpen(false);
+    }
+
+    const useClickOutside = (ref: any, onClickOutside: any) => {
+        useEffect(() => {
+            /**
+             * Invoke Function onClick outside of element
+             */
+            function handleClickOutside(event: any) {
+                if (ref.current && !ref.current.contains(event.target)) {
+                    onClickOutside();
+                }
+            }
+            // Bind
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", (event) => event.key === 'Escape' && onClickOutside());
+            return () => {
+                // dispose
+                document.removeEventListener("mousedown", handleClickOutside);
+                document.removeEventListener("keydown", (event) => event.key === 'Escape' && onClickOutside());
+            };
+        }, [ref, onClickOutside]);
+    }
+
+    useClickOutside(wrapperRef, () => {
+        setHamburgerOpen(false);
+    });
+
     return (
-        <div className={"header"}>
+        <div className={"header"} ref={wrapperRef}>
             <div className={"title"}>
                 PIPERR
             </div>
             <div className={"navigation"}>
                 <ul>
-                    <li onClick={createNewWorkflowAction}>New Workflow</li>
+                    <li onClick={() => createNewWorkflowAndClose()}>New Workflow</li>
                     <hr/>
                     {workflows
                         .map((workflow, index) =>
                             (
                                 <li key={index}
-                                    onClick={() => chooseWorkflowAction(workflow.title)}>{workflow.title}</li>
+                                    onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</li>
                             )
                         )
                     }
