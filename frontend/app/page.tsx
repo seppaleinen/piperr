@@ -5,7 +5,7 @@ import WorkflowModule from '@/app/workflow.module';
 import Header from '@/app/header';
 import Workflow from '@/app/workflow';
 
-export default function Page() {
+export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
 

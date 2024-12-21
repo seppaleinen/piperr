@@ -1,14 +1,15 @@
 "use client";
 import styles from './workflow.module.css';
 import CardModule from './card.module';
-import { Workflow } from '@/app/page';
+import Button from '@/app/button.module';
+import Card from '@/app/card';
+import Workflow from '@/app/workflow';
 
-export default function WorkflowModule({workflow, setTitleAction, setWorkflowAction}: {
+export default ({workflow, setTitleAction, setWorkflowAction}: {
     workflow: Workflow,
     setTitleAction: (titles: string) => void,
     setWorkflowAction: (workflow: Workflow) => void
-}) {
-
+}) => {
     const executeScript = async (index: number) => {
         updateCardLoading(index, true);
         updateCardOutput(index, '')
@@ -85,14 +86,13 @@ export default function WorkflowModule({workflow, setTitleAction, setWorkflowAct
                    placeholder={"Name your workflow"}
                    onChange={(e) => updateTitle(e.target.value)}
                    className={styles.title}/>
-            {workflow.cards.map((card, index) => (
+            {workflow.cards.map((card: Card, index: number) => (
                 <CardModule
                     key={index}
                     index={index}
                     script={card.script}
                     output={card.output}
                     loading={card.loading}
-                    title={workflow.title}
                     isLastStep={workflow.cards.length === index + 1}
                     addCardAction={addCardAction}
                     removeCardAction={() => removeCardAction(index)}
@@ -100,9 +100,7 @@ export default function WorkflowModule({workflow, setTitleAction, setWorkflowAct
                     executeScriptAction={() => executeScript(index)}
                 />
             ))}
-            <button className="button" onClick={executeAllScripts}>
-                Execute all steps
-            </button>
+            <Button action={executeAllScripts} text={"Execute all steps"}/>
         </div>
     );
 }

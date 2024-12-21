@@ -3,11 +3,11 @@ import Hamburger from '@/app/hamburger.module';
 import { useEffect, useRef, useState } from 'react';
 import Workflow from '@/app/workflow';
 
-export default function Header({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
+export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
     workflows: Workflow[],
     chooseWorkflowAction: (title: string) => void,
     createNewWorkflowAction: () => void
-}) {
+}) => {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
 
