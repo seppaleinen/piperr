@@ -1,6 +1,6 @@
 "use client";
 import styles from './page.module.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WorkflowModule from '@/app/workflow.module';
 import Header from '@/app/header';
 import Workflow from '@/app/workflow';
@@ -8,6 +8,15 @@ import Workflow from '@/app/workflow';
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
+
+    useEffect(() => {
+        async function fetchWorkflows() {
+            const response = await fetch('http://localhost:8000/workflows');
+            const result = await response.json();
+            setWorkflows(result.map((workflow: any) => new Workflow(workflow.title, workflow.cards)));
+        }
+        fetchWorkflows().then(() => {});
+    }, [])
 
     const setTitle = (title: string) => {
         if(title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {

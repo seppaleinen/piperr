@@ -2,6 +2,8 @@
 import Hamburger from '@/app/hamburger.module';
 import { useEffect, useRef, useState } from 'react';
 import Workflow from '@/app/workflow';
+import styles from './header.module.css';
+import PersistWorkflows from '@/app/persist.module';
 
 export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
     workflows: Workflow[],
@@ -52,9 +54,6 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
 
     return (
         <div className={"header"} ref={wrapperRef}>
-            <div className={"title"}>
-                PIPERR
-            </div>
             <div className={"navigation"}>
                 <ul>
                     <li onClick={() => createNewWorkflowAndClose()}>New Workflow</li>
@@ -71,6 +70,12 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
                 <div className={"hamburger"} onClick={toggleHamburger}>
                     <Hamburger isOpen={hamburgerOpen}/>
                 </div>
+            </div>
+            <div className={"title"}>
+                PIPERR
+            </div>
+            <div className={styles.persist}>
+                <PersistWorkflows workflows={workflows}/>
             </div>
 
             <style jsx>{`
