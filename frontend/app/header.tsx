@@ -135,8 +135,9 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                 }
 
                 .hamburger {
-                    display: block;
                     padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+                    display: flex;
+                    align-items: center;
                 }
 
                 .navigation ul {

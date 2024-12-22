@@ -93,7 +93,6 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
                     script={card.script}
                     output={card.output}
                     loading={card.loading}
-                    isLastStep={workflow.cards.length === index + 1}
                     addCardAction={addCardAction}
                     removeCardAction={() => removeCardAction(index)}
                     updateCardScriptAction={updateCardScript}

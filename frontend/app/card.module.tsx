@@ -7,7 +7,6 @@ export default ({
                     script,
                     output,
                     addCardAction,
-                    isLastStep,
                     removeCardAction,
                     updateCardScriptAction,
                     executeScriptAction,
@@ -17,7 +16,6 @@ export default ({
     script: string;
     output: string | null;
     addCardAction: () => void;
-    isLastStep: boolean;
     removeCardAction: () => void;
     updateCardScriptAction: (index: number, script: string) => void;
     executeScriptAction: () => Promise<void>;
