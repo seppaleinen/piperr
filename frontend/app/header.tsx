@@ -28,7 +28,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         setHamburgerOpen(false);
     }
 
-    const useClickOutside = (ref: any, onClickOutside: any) => {
+    const closeNavigationOnClickOutside = (ref: any, onClickOutside: any) => {
         useEffect(() => {
             /**
              * Invoke Function onClick outside of element
@@ -50,7 +50,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         }, [ref, onClickOutside]);
     }
 
-    useClickOutside(wrapperRef, () => {
+    closeNavigationOnClickOutside(wrapperRef, () => {
         setHamburgerOpen(false);
     });
 
@@ -58,15 +58,19 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         <div className={"header"} ref={wrapperRef}>
             <div className={"navigation"}>
                 <ul>
-                    <li onClick={() => createNewWorkflowAndClose()}>Create new workflow</li>
+                    <li onClick={() => createNewWorkflowAndClose()}>
+                        <div>Create new workflow</div>
+                    </li>
                     <hr/>
                     {workflows
                         .map((workflow, index) =>
                             (
-                                <li key={index}
-                                    onClick={() => chooseWorkflowAndClose(workflow.title)}>
-                                    <div className={"inline"}>{workflow.title}</div>
-                                    <div className={"inline close"} onClick={() => removeWorkflowAction(workflow.title)}>X</div>
+                                <li key={index}>
+                                    <div className={"inline name"}
+                                         onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</div>
+                                    <div className={"inline close"}
+                                         onClick={() => removeWorkflowAction(workflow.title)}>X
+                                    </div>
                                 </li>
                             )
                         )
@@ -143,17 +147,21 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                     margin-top: 55px;
                     position: fixed;
                 }
-                
+
                 .inline {
                     display: inline;
                 }
                 
+                .name {
+                    width: 100%;
+                }
+
                 .close {
                     padding: 0 8px;
                     cursor: pointer;
                     border: 8px;
                 }
-                
+
                 .close:active {
                     box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
                 }

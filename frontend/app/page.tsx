@@ -31,7 +31,9 @@ export default () => {
     const chooseWorkflow = (title: string) => {
         workflows
             .map((workflow, index) => {
+                console.log("INDEX: " + index + ":" + workflow.title)
                 if (workflow.title === title) {
+                    console.log("Setting index to: " + index);
                     setWorkflowIndex(index);
                 }
             });
@@ -47,10 +49,13 @@ export default () => {
     }
 
     const removeWorkflowAction = (title: string) => {
-        const updatedWorkflows = workflows.filter(workflow => workflow.title !== title);
+        // If the current workflow is removed, set the current workflow to the first one
         if (title === workflows[workflowIndex].title) {
-            setWorkflowIndex(0);
+            chooseWorkflow(workflows[0].title);
         }
+
+        const updatedWorkflows = workflows.filter(workflow => workflow.title !== title);
+        // If all workflows are removed, add a new one
         if (updatedWorkflows.length === 0) {
             updatedWorkflows.push(new Workflow());
         }
@@ -70,6 +75,7 @@ export default () => {
                     createNewWorkflowAction={createNewWorkflowAction}
                     removeWorkflowAction={removeWorkflowAction}
             />
+
             <WorkflowModule workflow={workflows[workflowIndex]}
                             setTitleAction={setTitle}
                             setWorkflowAction={setWorkflowAction}
