@@ -1,10 +1,12 @@
 .icon {
     padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
     border: 8px;
+    border-radius: 8px;
+    margin-right: clamp(24px, 5vw, 80px);
 }
 
-.icon:hover svg path {
-    fill: #000000;
+.icon:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
 }
 
 .icon:active {

@@ -1,9 +1,18 @@
 .card {
     padding-bottom: 32px;
+    display: grid;
+    grid-template-areas:
+        "outerScript addCard"
+        "outerScript removeCard"
+        "outerScript execute"
+        "output      output";
+    grid-template-columns: 85% 14.3%;
+    gap: 8px;
 }
 
 .outerScript {
     position: relative;
+    grid-area: outerScript;
 }
 
 .outerScript svg {
@@ -38,8 +47,8 @@
 .script {
     vertical-align: bottom;
     width: 100%;
-    field-sizing: content;
     padding: 8px;
+    height: 136px;
 }
 
 .showBorder {
@@ -54,13 +63,41 @@
     width: 100%;
     border-radius: 4px;
     white-space: pre-wrap;
-    background-color: gray;
+    color: var(--foreground);
+    background-color: color-mix(in srgb, var(--primary), white 70%);
     display: inline-block;
     float: left;
     overflow-wrap: break-word;
+    grid-area: output;
 }
 
 .remove {
     display: inline-block;
     float: left;
+    grid-area: removeCard;
+}
+
+.execute {
+    grid-area: execute;
+}
+
+.addCard {
+    grid-area: addCard;
+}
+
+.removeCard {
+    grid-area: removeCard;
+}
+
+@media (max-width: 856px) {
+    .card {
+        padding-bottom: 20px;
+        display: grid;
+        grid-template-areas:
+        "outerScript    outerScript outerScript"
+        "addCard        removeCard  execute"
+        "output         output      output";
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
 }

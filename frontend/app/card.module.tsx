@@ -43,12 +43,9 @@ export default ({
                 placeholder="Enter script here..."
             ></textarea>
         </div>
-        <Button action={executeScriptAction} text={"Execute step"}/>
+        <Button action={executeScriptAction} text={"Execute step"} style={styles.execute}/>
+        <Button action={addCardAction} text={"Add step"} style={styles.addCard}/>
+        <Button action={removeCardAction} text={"Remove step"} style={styles.removeCard}/>
         {output && <div className={styles.output}>{output}</div>}
-        {isLastStep ? (
-            <Button action={addCardAction} text={"Add step"}/>
-        ) : (
-            <Button action={removeCardAction} text={"Remove step"}/>
-        )}
     </div>
 )
