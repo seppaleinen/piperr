@@ -14,3 +14,6 @@
     background-color: #2b6cb0; /* Corresponds to hover:bg-blue-700 */
 }
 
+.button:active {
+    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
+}

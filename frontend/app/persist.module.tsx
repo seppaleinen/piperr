@@ -30,7 +30,7 @@ export default function PersistWorkflows(
 
 const icon = (
     <svg fill="#2b6cb0" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-         width="40px" height="40px" viewBox="0 0 488.446 488.446">
+         width="32px" height="32px" viewBox="0 0 488.446 488.446">
         <g>
             <g>
                 <g>

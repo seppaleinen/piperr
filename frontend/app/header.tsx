@@ -5,10 +5,11 @@ import Workflow from '@/app/workflow';
 import styles from './header.module.css';
 import PersistWorkflows from '@/app/persist.module';
 
-export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
+export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
     workflows: Workflow[],
     chooseWorkflowAction: (title: string) => void,
-    createNewWorkflowAction: () => void
+    createNewWorkflowAction: () => void,
+    removeWorkflowAction: (title: string) => void
 }) => {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +38,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
                     onClickOutside();
                 }
             }
+
             // Bind
             document.addEventListener("mousedown", handleClickOutside);
             document.addEventListener("keydown", (event) => event.key === 'Escape' && onClickOutside());
@@ -56,13 +58,16 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
         <div className={"header"} ref={wrapperRef}>
             <div className={"navigation"}>
                 <ul>
-                    <li onClick={() => createNewWorkflowAndClose()}>New Workflow</li>
+                    <li onClick={() => createNewWorkflowAndClose()}>Create new workflow</li>
                     <hr/>
                     {workflows
                         .map((workflow, index) =>
                             (
                                 <li key={index}
-                                    onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</li>
+                                    onClick={() => chooseWorkflowAndClose(workflow.title)}>
+                                    <div className={"inline"}>{workflow.title}</div>
+                                    <div className={"inline close"} onClick={() => removeWorkflowAction(workflow.title)}>X</div>
+                                </li>
                             )
                         )
                     }
@@ -108,15 +113,17 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
                     font-weight: bolder;
                     font-size: 24px; /* Slightly larger text */
                     color: var(--foreground); /* Ensure text is visible */
-                    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+                    padding: 8px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                 }
 
-                .navigation ul div {
+                .navigation ul li div {
                     list-style-type: none;
                     font-weight: bolder;
                     font-size: 24px; /* Slightly larger text */
                     color: var(--foreground); /* Ensure text is visible */
-                    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
                 }
 
                 .navigation ul li:hover {
@@ -135,6 +142,20 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction}: {
                     width: 60vw;
                     margin-top: 55px;
                     position: fixed;
+                }
+                
+                .inline {
+                    display: inline;
+                }
+                
+                .close {
+                    padding: 0 8px;
+                    cursor: pointer;
+                    border: 8px;
+                }
+                
+                .close:active {
+                    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
                 }
 
                 @media (max-width: 767px) {

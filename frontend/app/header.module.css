@@ -1,12 +1,42 @@
 .header {
-    background-color: #4299e1;
-    height: 40px;
+    background-color: var(--primary);
+    height: 60px; /* Increased height for better spacing */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bolder;
+    justify-content: center; /* Align title and navigation on ends */
+    align-items: center; /* Vertically center items */
     box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    width: 100%; /* Full width of the screen */
 }
 
-.persist {
+.navigation {
+    width: 100%;
+    z-index: 100;
+}
+
+.title {
+    font-weight: bolder;
+    font-size: 24px; /* Slightly larger text */
+    color: var(--foreground); /* Ensure text is visible */
+    position: absolute; /* Allow absolute centering for PIPERR */
+    left: 50%;
+    transform: translateX(-50%); /* Center the title horizontally */
+}
+
+.hamburger {
+    display: block;
+    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+}
+
+.inline {
+    display: inline;
+}
+
+.close {
+    padding: 0 8px;
+    cursor: pointer;
+    border: 8px;
+}
+
+.close:active {
+    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
 }

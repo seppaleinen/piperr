@@ -15,11 +15,13 @@ export default () => {
             const result = await response.json();
             setWorkflows(result.map((workflow: any) => new Workflow(workflow.title, workflow.cards)));
         }
-        fetchWorkflows().then(() => {});
+
+        fetchWorkflows().then(() => {
+        });
     }, [])
 
     const setTitle = (title: string) => {
-        if(title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
+        if (title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
             const updatedWorkflows = [...workflows];
             updatedWorkflows[workflowIndex].title = title;
             setWorkflows(updatedWorkflows);
@@ -29,7 +31,7 @@ export default () => {
     const chooseWorkflow = (title: string) => {
         workflows
             .map((workflow, index) => {
-                if(workflow.title === title) {
+                if (workflow.title === title) {
                     setWorkflowIndex(index);
                 }
             });
@@ -44,6 +46,17 @@ export default () => {
         }
     }
 
+    const removeWorkflowAction = (title: string) => {
+        const updatedWorkflows = workflows.filter(workflow => workflow.title !== title);
+        if (title === workflows[workflowIndex].title) {
+            setWorkflowIndex(0);
+        }
+        if (updatedWorkflows.length === 0) {
+            updatedWorkflows.push(new Workflow());
+        }
+        setWorkflows(updatedWorkflows);
+    }
+
     const setWorkflowAction = (workflow: Workflow) => {
         const updatedWorkflows = [...workflows];
         updatedWorkflows[workflowIndex] = workflow;
@@ -55,7 +68,8 @@ export default () => {
             <Header workflows={workflows}
                     chooseWorkflowAction={chooseWorkflow}
                     createNewWorkflowAction={createNewWorkflowAction}
-                    />
+                    removeWorkflowAction={removeWorkflowAction}
+            />
             <WorkflowModule workflow={workflows[workflowIndex]}
                             setTitleAction={setTitle}
                             setWorkflowAction={setWorkflowAction}
