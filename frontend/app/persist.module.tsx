@@ -15,9 +15,11 @@ export default function PersistWorkflows(
                 body: JSON.stringify({workflows}),
             });
             const result = await response.text();
-            console.log(`Result: ${result}`)
+            if(result !== 'OK') {
+                console.error(`Persistency failed: ${result}`);
+            }
         } catch (error) {
-            console.error(`Error: ${error}`)
+            console.error(`Persistency failed: ${error}`)
         }
     };
 

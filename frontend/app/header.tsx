@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Workflow from '@/app/workflow';
 import styles from './header.module.css';
 import PersistWorkflows from '@/app/persist.module';
+import { Link } from 'react-router-dom';
 
 export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
     workflows: Workflow[],
@@ -58,6 +59,12 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         <div className={"header"} ref={wrapperRef}>
             <div className={"navigation"}>
                 <ul>
+                    <li>
+                        <Link to="/" className="btn btn-primary" onClick={() => setHamburgerOpen(!hamburgerOpen)}>Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/about" className="btn btn-primary" onClick={() => setHamburgerOpen(!hamburgerOpen)}>about</Link>
+                    </li>
                     <li onClick={() => createNewWorkflowAndClose()}>
                         <div>Create new workflow</div>
                     </li>
