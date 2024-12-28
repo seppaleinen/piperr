@@ -1,4 +1,4 @@
-import Card from '@/app/card';
+import Card from './card';
 
 export default class Workflow {
     constructor(title: string = 'Unnamed workflow', cards: Card[] = [new Card()]) {

@@ -1,9 +1,9 @@
-"use client";
 import styles from './page.module.css';
 import React, { useEffect, useState } from 'react';
-import WorkflowModule from '@/app/workflow.module';
-import Header from '@/app/header';
-import Workflow from '@/app/workflow';
+import WorkflowModule from './workflow.module';
+import Header from './header.module';
+import Workflow from './workflow';
+import './globals.css';
 
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);

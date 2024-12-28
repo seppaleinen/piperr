@@ -1,6 +1,5 @@
-"use client";
 import styles from './card.module.css';
-import Button from '@/app/button.module';
+import Button from './button.module';
 
 export default ({
                     index,

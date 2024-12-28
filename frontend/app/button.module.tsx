@@ -1,5 +1,4 @@
-"use client";
-import styles from '@/app/button.module.css';
+import styles from './button.module.css';
 
 export default ({action, text, style}: {
     action: () => void,

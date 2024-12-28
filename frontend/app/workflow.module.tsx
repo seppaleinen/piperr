@@ -1,9 +1,8 @@
-"use client";
 import styles from './workflow.module.css';
 import CardModule from './card.module';
-import Button from '@/app/button.module';
-import Card from '@/app/card';
-import Workflow from '@/app/workflow';
+import Button from './button.module';
+import Card from './card';
+import Workflow from './workflow';
 
 export default ({workflow, setTitleAction, setWorkflowAction}: {
     workflow: Workflow,

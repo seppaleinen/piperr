@@ -1,5 +1,4 @@
-"use client";
-import Workflow from '@/app/workflow';
+import Workflow from './workflow';
 import styles from './persist.module.css';
 
 export default function PersistWorkflows(

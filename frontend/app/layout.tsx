@@ -1,33 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import styles from './layout.module.css';
 import React from 'react';
+import ReactDOM from 'react-dom/client';
+import Page from './page';
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-    title: "Piperr",
-    description: "Create script workflows",
-};
-
-export default ({children,}
-                :
-                Readonly<{ children: React.ReactNode; }>) =>
-    (
-        <html lang="en">
-        <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased ${styles.layout}`}
-        >
-        {children}
-        </body>
-        </html>
-    )
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <Page />
+    </React.StrictMode>
+);

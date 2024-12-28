@@ -1,5 +1,5 @@
 .icon {
-    padding: 10px clamp(24px, 5vw, 80px); /* Add some horizontal padding */
+    padding: 10px clamp(4px, 5vw, 12px); /* Add some horizontal padding */
     border: 8px;
     border-radius: 8px;
     margin-right: clamp(24px, 5vw, 80px);
