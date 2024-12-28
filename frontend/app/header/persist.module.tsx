@@ -1,4 +1,4 @@
-import Workflow from './workflow';
+import Workflow from '../workflow';
 import styles from './persist.module.css';
 
 export default function PersistWorkflows(

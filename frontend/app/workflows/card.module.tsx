@@ -1,5 +1,5 @@
 import styles from './card.module.css';
-import Button from './button.module';
+import Button from '../button.module';
 
 export default ({
                     index,

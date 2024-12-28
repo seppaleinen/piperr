@@ -1,6 +1,6 @@
 import Hamburger from './hamburger.module';
 import { useEffect, useRef, useState } from 'react';
-import Workflow from './workflow';
+import Workflow from '../workflow';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 
@@ -54,7 +54,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
     });
 
     return (
-        <div className={styles.header} ref={wrapperRef}>
+        <header className={styles.header} ref={wrapperRef}>
             <div className={`${styles.navigation}`}>
                 <ul className={hamburgerOpen || styles.hide}>
                     <li onClick={() => createNewWorkflowAndClose()}>
@@ -85,7 +85,6 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
             <div className={styles.persist}>
             <PersistWorkflows workflows={workflows}/>
             </div>
-        </div>
-    )
-        ;
+        </header>
+    );
 }
