@@ -1,4 +1,5 @@
 import styles from './hamburger.module.css';
+import React from 'react';
 
 export default (
     {isOpen}:

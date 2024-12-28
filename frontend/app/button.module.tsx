@@ -1,4 +1,5 @@
 import styles from './button.module.css';
+import React from 'react';
 
 export default ({action, text, style}: {
     action: () => void,

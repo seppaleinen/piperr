@@ -1,5 +1,6 @@
 import styles from './card.module.css';
 import Button from '../button.module';
+import React from 'react';
 
 export default ({
                     index,

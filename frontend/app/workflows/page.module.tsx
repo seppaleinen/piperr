@@ -4,6 +4,8 @@ import WorkflowModule from './workflow.module';
 import Header from '../header/header.module';
 import Workflow from '../workflow';
 import '../globals.css';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import AboutModule from '../about.module';
 
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
@@ -12,8 +14,11 @@ export default () => {
     useEffect(() => {
         async function fetchWorkflows() {
             const response = await fetch('http://localhost:8000/workflows');
-            const result = await response.json();
-            setWorkflows(result.map((workflow: any) => new Workflow(workflow.title, workflow.cards)));
+            let result: Workflow[] = await response.json();
+            if (result.length === 0) {
+                result = [new Workflow()];
+            }
+            setWorkflows(result.map((workflow: Workflow) => new Workflow(workflow.title, workflow.cards)));
         }
 
         fetchWorkflows().then(() => {
@@ -68,18 +73,24 @@ export default () => {
         setWorkflows(updatedWorkflows);
     }
 
+    const workflowModule = <WorkflowModule workflow={workflows[workflowIndex]}
+                                           setTitleAction={setTitle}
+                                           setWorkflowAction={setWorkflowAction}/>;
     return (
         <div className={styles.main}>
-            <Header workflows={workflows}
-                    chooseWorkflowAction={chooseWorkflow}
-                    createNewWorkflowAction={createNewWorkflowAction}
-                    removeWorkflowAction={removeWorkflowAction}
-            />
+            <BrowserRouter>
+                <Header workflows={workflows}
+                        chooseWorkflowAction={chooseWorkflow}
+                        createNewWorkflowAction={createNewWorkflowAction}
+                        removeWorkflowAction={removeWorkflowAction}
+                />
 
-            <WorkflowModule workflow={workflows[workflowIndex]}
-                            setTitleAction={setTitle}
-                            setWorkflowAction={setWorkflowAction}
-            />
+                <Routes>
+                    <Route index path="/" element={workflowModule}/>
+                    <Route path="/about" element={<AboutModule/>}/>
+                    <Route path="*" element={workflowModule}/>
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }

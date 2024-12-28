@@ -3,6 +3,7 @@ import CardModule from './card.module';
 import Button from '../button.module';
 import Card from '../card';
 import Workflow from '../workflow';
+import React from 'react';
 
 export default ({workflow, setTitleAction, setWorkflowAction}: {
     workflow: Workflow,

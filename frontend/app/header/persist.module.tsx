@@ -1,5 +1,6 @@
 import Workflow from '../workflow';
 import styles from './persist.module.css';
+import React from 'react';
 
 export default function PersistWorkflows(
     {workflows}:
