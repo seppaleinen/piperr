@@ -15,8 +15,15 @@ db = 'workflows.db'
 def create_database():
     conn = sqlite3.connect(db)
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS workflows (title TEXT PRIMARY KEY)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS cards ( workflow_title TEXT NOT NULL REFERENCES workflows(title), card_index INTEGER NOT NULL, script TEXT, constraint card_pk PRIMARY KEY (workflow_title, card_index)) ''')
+    c.execute('''CREATE TABLE IF NOT EXISTS settings    (id INTEGER PRIMARY KEY)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS agents      (id INTEGER PRIMARY KEY, 
+                                                         ip TEXT NOT NULL UNIQUE,
+                                                         sudo_password TEXT NOT NULL)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS workflows   (title TEXT PRIMARY KEY)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS cards       (workflow_title TEXT NOT NULL REFERENCES workflows(title), 
+                                                         card_index INTEGER NOT NULL, 
+                                                         script TEXT, 
+                                                         constraint card_pk PRIMARY KEY (workflow_title, card_index)) ''')
     conn.commit()
     conn.close()
 
@@ -67,7 +74,7 @@ def get_workflows():
 
     return jsonify(response)  # Convert to a Flask JSON response
 
-@app.route("/persist", methods=['POST'], endpoint='persist_workflows')
+@app.route("/persist/workflows", methods=['POST'], endpoint='persist_workflows')
 def persist_workflows():
     data = request.get_json()
     conn = sqlite3.connect(db)
@@ -78,6 +85,16 @@ def persist_workflows():
         c.execute('INSERT OR REPLACE INTO workflows (title) VALUES (?)', (workflow.get('title'),))
         for idx, card in enumerate(workflow['cards']):
             c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)', (workflow['title'], idx, card['script']))
+    conn.commit()
+    conn.close()
+    return "OK"
+
+@app.route("/persist/settings", methods=['POST'], endpoint='persist_settings')
+def persist_settings():
+    data = request.get_json()
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    c.execute('INSERT OR REPLACE INTO agents (sudo_password) VALUES (?)', (data['password'],))
     conn.commit()
     conn.close()
     return "OK"

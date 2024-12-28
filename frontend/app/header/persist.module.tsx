@@ -9,7 +9,7 @@ export default function PersistWorkflows(
     const persistWorkflows = async () => {
         try {
             console.log(`Persisting workflows: ${JSON.stringify(workflows)}`);
-            const response = await fetch('http://localhost:8000/persist', {
+            const response = await fetch('http://localhost:8000/persist/workflows', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({workflows}),

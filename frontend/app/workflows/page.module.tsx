@@ -6,6 +6,7 @@ import Workflow from '../workflow';
 import '../globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AboutModule from '../about.module';
+import SettingsModule from '../settings/settings.module';
 
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
@@ -86,6 +87,7 @@ export default () => {
                 <Routes>
                     <Route index path="/" element={workflowModule}/>
                     <Route path="/about" element={<AboutModule/>}/>
+                    <Route path="/settings" element={<SettingsModule/>}/>
                     <Route path="*" element={workflowModule}/>
                 </Routes>
             </BrowserRouter>

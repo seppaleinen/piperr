@@ -62,6 +62,9 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                         <Link to={'/'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>Home</Link>
                     </li>
                     <li>
+                        <Link to={'/settings'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>Settings</Link>
+                    </li>
+                    <li>
                         <Link to={'/about'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>About</Link>
                     </li>
                     <li onClick={() => createNewWorkflowAndClose()}>
