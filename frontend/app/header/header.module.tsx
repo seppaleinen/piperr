@@ -56,7 +56,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
     return (
         <header className={styles.header} ref={wrapperRef}>
             <div className={`${styles.navigation}`}>
-                <ul className={hamburgerOpen || styles.hide}>
+                <ul className={hamburgerOpen ? '' : styles.hide}>
                     <li onClick={() => createNewWorkflowAndClose()}>
                         <div>Create new workflow</div>
                     </li>

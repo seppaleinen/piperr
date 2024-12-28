@@ -36,9 +36,7 @@ export default () => {
     const chooseWorkflow = (title: string) => {
         workflows
             .map((workflow, index) => {
-                console.log("INDEX: " + index + ":" + workflow.title)
                 if (workflow.title === title) {
-                    console.log("Setting index to: " + index);
                     setWorkflowIndex(index);
                 }
             });
