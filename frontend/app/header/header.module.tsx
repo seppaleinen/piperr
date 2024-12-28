@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Workflow from '../workflow';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
+import { Link } from 'react-router-dom';
 
 export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
     workflows: Workflow[],
@@ -57,6 +58,12 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         <header className={styles.header} ref={wrapperRef}>
             <div className={`${styles.navigation}`}>
                 <ul className={hamburgerOpen ? '' : styles.hide}>
+                    <li>
+                        <Link to={'/'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>Home</Link>
+                    </li>
+                    <li>
+                        <Link to={'/about'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>About</Link>
+                    </li>
                     <li onClick={() => createNewWorkflowAndClose()}>
                         <div>Create new workflow</div>
                     </li>

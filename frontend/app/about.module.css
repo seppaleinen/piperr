@@ -1,0 +1,19 @@
+.about {
+    padding: 0 clamp(0px, 5vw, 80px);
+
+    h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+
+    p {
+        white-space: pre-line;
+        word-wrap: break-word;
+        margin-bottom: 16px;
+
+        code {
+            background-color: color-mix(in hsl, var(--background), gray 20%);;
+        }
+    }
+}

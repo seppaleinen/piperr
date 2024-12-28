@@ -32,6 +32,10 @@
     align-items: center;
     justify-content: space-between;
 
+    a {
+        width: 100%;
+        padding: 0;
+    }
 }
 
 .navigation ul li div {
@@ -52,7 +56,7 @@
 }
 
 .navigation ul {
-    background-color: color-mix(in hsl, var(--background), gray 5%);;
+    background-color: color-mix(in hsl, var(--background), gray 5%);
     height: 100vh;
     width: 60vw;
     margin-top: 66px;
