@@ -1,10 +1,11 @@
 .button {
     vertical-align: bottom;
     background-color: var(--primary); /* Corresponds to bg-blue-500 */
-    color: white;             /* Corresponds to text-white */
+    color: var(--background);             /* Corresponds to text-white */
     font-weight: bold;        /* Corresponds to font-bold */
-    padding: 0.5rem 0.5rem;
+    padding: clamp(4px, -0.571rem + 1.429vw, 24px);
     border-radius: 0.25rem;   /* Corresponds to rounded */
+    width: clamp(150px, -0.571rem + 1.429vw, 220px);
     transition: background-color 0.2s; /* For hover effect */
     box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
 }

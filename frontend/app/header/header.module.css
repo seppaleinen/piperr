@@ -1,10 +1,9 @@
 .header {
-    background-color: var(--primary);
+    background-color: var(--background);
     height: 60px; /* Increased height for better spacing */
     display: flex;
     justify-content: center; /* Align title and navigation on ends */
     align-items: center; /* Vertically center items */
-    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
     width: 100%; /* Full width of the screen */
 }
 
@@ -15,6 +14,7 @@
     position: absolute; /* Allow absolute centering for PIPERR */
     left: 50%;
     transform: translateX(-50%); /* Center the title horizontally */
+
 }
 
 .navigation {
@@ -31,6 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
 }
 
 .navigation ul li div {
@@ -51,15 +52,25 @@
 }
 
 .navigation ul {
-    background-color: var(--primary);
+    background-color: color-mix(in hsl, var(--background), gray 5%);;
     height: 100vh;
     width: 60vw;
     margin-top: 66px;
     position: fixed;
+    transition: width 0.3s ease-in-out;
+
+    hr {
+        border: 1px solid var(--foreground);
+        margin: 8px 0;
+    }
 }
 
-.hide {
-    display: none;
+.navigation ul.hide {
+    width: 0;
+
+    * {
+        display: none;
+    }
 }
 
 .inline {
@@ -74,9 +85,14 @@
     padding: 0 8px;
     cursor: pointer;
     border: 8px;
+    border-radius: 4px;
 }
 
 .close:active {
+    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
+}
+
+.close:hover {
     box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
 }
 
