@@ -78,12 +78,10 @@ def get_settings():
 
         workflows = c.fetchall()
 
-    response = []
+    response = {}
     for row in workflows:
-        response.append({
-            "id": row["id"],
-            "agents": json.loads(row["agents"]) if row["agents"] else []  # Deserialize JSON string
-        })
+        response['id'] = row["id"]
+        response['agents'] = json.loads(row["agents"]) if row["agents"] else []
 
     return jsonify(response)  # Convert to a Flask JSON response
 
