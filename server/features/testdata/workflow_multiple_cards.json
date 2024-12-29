@@ -1,0 +1,12 @@
+[{
+  "title":"title",
+  "cards":[{
+	"script":"script",
+	"output":null,
+	"loading":false
+  },{
+	"script":"script2",
+	"output":null,
+	"loading":false
+  }]
+}]

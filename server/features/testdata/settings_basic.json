@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "agents": [
+	{
+	  "ip": "192.168.1.101",
+	  "sudo_password": "password2"
+	}
+  ]
+}

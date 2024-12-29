@@ -12,7 +12,7 @@ export default function PersistWorkflows(
             const response = await fetch('http://localhost:8000/persist/workflows', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({workflows}),
+                body: JSON.stringify(workflows),
             });
             const result = await response.text();
             console.log(`Result: ${result}`)

@@ -9,4 +9,6 @@ dependencies = [
     "flask-cors==5.0.0",    # Enables CORS
     "hypercorn==0.17.3",    # ASGI web server
     "asgiref==3.8.1",       # WSGI-to-ASGI adapter
+    "behave==1.2.6",        # BDD testing
+    "pyhamcrest==2.1.0",    # Matchers for testing
 ]
