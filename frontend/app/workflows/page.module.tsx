@@ -2,7 +2,7 @@ import styles from './page.module.css';
 import React, { useEffect, useState } from 'react';
 import WorkflowModule from './workflow.module';
 import Header from '../header/header.module';
-import Workflow from '../workflow';
+import { Workflow } from '../domains';
 import '../globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AboutModule from '../about.module';

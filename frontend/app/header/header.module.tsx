@@ -1,6 +1,6 @@
 import Hamburger from './hamburger.module';
 import React, { useEffect, useRef, useState } from 'react';
-import Workflow from '../workflow';
+import { Workflow } from '../domains';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
@@ -96,7 +96,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                 PIPERR
             </div>
             <div className={styles.persist}>
-            <PersistWorkflows workflows={workflows}/>
+                <PersistWorkflows workflows={workflows}/>
             </div>
         </header>
     );

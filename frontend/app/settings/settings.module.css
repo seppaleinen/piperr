@@ -21,6 +21,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+
         .agent {
             border: solid 1px var(--foreground);
             border-radius: 8px;

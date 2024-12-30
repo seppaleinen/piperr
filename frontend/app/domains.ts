@@ -15,6 +15,7 @@ export class Workflow {
         this.title = title;
         this.cards = cards;
     }
+
     title: string;
     cards: Card[];
 }
@@ -25,6 +26,7 @@ export class Agent {
         this.ip = ip;
         this.sudo_password = sudo_password;
     }
+
     id: number;
     ip: string;
     sudo_password: string;
@@ -34,5 +36,6 @@ export class Settings {
     constructor(agents: Agent[] = [new Agent()]) {
         this.agents = agents;
     }
+
     agents: Agent[];
 }

@@ -14,13 +14,15 @@ export default () => (
         </p>
         <p>
             Whether it’s scheduling daily updates <code>sudo apt update -y</code> or running intricate
-            manual commands like <code>find ~ -type d -name .git -exec sh -c 'cd &#123;&#125;; git pull;' \;</code>, the tool
+            manual commands like <code>find ~ -type d -name .git -exec sh -c 'cd &#123;&#125;; git pull;' \;</code>, the
+            tool
             provides
             flexibility and precision for all your needs.
         </p>
         <br/>
         <p>
-            A key feature of this system is the ability to chain commands together seamlessly. By using placeholders (&#123;&#125;),
+            A key feature of this system is the ability to chain commands together seamlessly. By using placeholders
+            (&#123;&#125;),
             the output of one step in a workflow can feed directly into the next. This not only saves time but also
             enables the creation of powerful, multi-step processes without the need for complex scripting.
         </p>

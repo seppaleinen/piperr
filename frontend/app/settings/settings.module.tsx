@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './settings.module.css';
 import ButtonModule from '../button.module';
 import { Agent, Settings } from '../domains';
-import {postData, getData} from '../util';
+import { getData, postData } from '../util';
 
 export default () => {
     const [settings, setSettings] = React.useState(new Settings());

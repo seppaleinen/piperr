@@ -1,8 +1,7 @@
 import styles from './workflow.module.css';
 import CardModule from './card.module';
 import Button from '../button.module';
-import Card from '../card';
-import Workflow from '../workflow';
+import { Card, Workflow } from '../domains';
 import React from 'react';
 import { postData } from '../util';
 
