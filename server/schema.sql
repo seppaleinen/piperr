@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS agents
 (
     id            INTEGER PRIMARY KEY,
     settings_id   INTEGER NOT NULL REFERENCES settings (id),
-    ip            TEXT NOT NULL UNIQUE,
+    ip            TEXT,
     sudo_password TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS workflows

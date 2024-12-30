@@ -1,6 +1,7 @@
 import json
 import sqlite3
 import subprocess
+import socket
 
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
@@ -10,6 +11,19 @@ app = Flask(__name__)
 asgi_app = WsgiToAsgi(app)
 cors = CORS(app, resources={r"/*/*": {"origins": "*"}}) # allow CORS for all domains on all routes.
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.254.254.254', 1))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        s.close()
+    return ip
 
 def get_db():
     if 'db' not in g:
@@ -67,12 +81,13 @@ def get_settings():
                 s.id,
                 json_group_array(
                     json_object(
+                        'id', a.id,
                         'ip', a.ip,
                         'sudo_password', a.sudo_password
                     )
                 ) AS agents
             FROM settings s
-            LEFT OUTER JOIN agents a ON a.settings_id = s.id
+            INNER JOIN agents a ON a.settings_id = s.id
             GROUP BY s.id;
         ''')
 
@@ -81,7 +96,12 @@ def get_settings():
     response = {}
     for row in workflows:
         response['id'] = row["id"]
-        response['agents'] = json.loads(row["agents"]) if row["agents"] else []
+        for ab in json.loads(row["agents"]):
+            a = ab
+            agent = {'ip': a.get('ip') if a.get('ip') else get_ip(),
+                     'sudo_password': a.get('sudo_password'),
+                     'id': a.get('id')}
+            response['agents'] = response.get('agents', []) + [agent]
 
     return jsonify(response)  # Convert to a Flask JSON response
 
@@ -106,10 +126,12 @@ def persist_workflows():
 def persist_settings():
     data = request.get_json()
     with get_db() as c:
-        if 'settings_id' not in data:
-            c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (1,))
+        c.execute('DELETE FROM agents')
+        c.execute('DELETE FROM settings')
+
+        c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (1,))
         for agent in data.get('agents', []):
-            c.execute('INSERT OR REPLACE INTO agents (ip, settings_id, sudo_password) VALUES (?, ?, ?)',
-                      (agent.get('ip'), 1, agent.get('sudo_password')))
+            c.execute('INSERT OR REPLACE INTO agents (id, ip, settings_id, sudo_password) VALUES (?, ?, ?, ?)',
+                      (agent.get('id'), agent.get('ip', None), 1, agent.get('sudo_password')))
         c.commit()
     return "OK"

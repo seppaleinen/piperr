@@ -7,6 +7,7 @@ import '../globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AboutModule from '../about.module';
 import SettingsModule from '../settings/settings.module';
+import { getData } from '../util';
 
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
@@ -14,12 +15,13 @@ export default () => {
 
     useEffect(() => {
         async function fetchWorkflows() {
-            const response = await fetch('http://localhost:8000/workflows');
-            let result: Workflow[] = await response.json();
-            if (result.length === 0) {
-                result = [new Workflow()];
-            }
-            setWorkflows(result.map((workflow: Workflow) => new Workflow(workflow.title, workflow.cards)));
+            getData('/workflows')
+                .then((result: Workflow[]) => {
+                    if (result.length === 0) {
+                        result = [new Workflow()];
+                    }
+                    setWorkflows(result.map((workflow: Workflow) => new Workflow(workflow.title, workflow.cards)));
+                });
         }
 
         fetchWorkflows().then(() => {

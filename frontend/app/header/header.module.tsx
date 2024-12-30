@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Workflow from '../workflow';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
     workflows: Workflow[],
@@ -11,6 +11,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
     createNewWorkflowAction: () => void,
     removeWorkflowAction: (title: string) => void
 }) => {
+    const navigate = useNavigate();
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
 
@@ -21,11 +22,13 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
     const createNewWorkflowAndClose = () => {
         createNewWorkflowAction();
         setHamburgerOpen(false);
+        navigate('/');
     }
 
     const chooseWorkflowAndClose = (title: string) => {
         chooseWorkflowAction(title);
         setHamburgerOpen(false);
+        navigate('/');
     }
 
     const closeNavigationOnClickOutside = (ref: any, onClickOutside: any) => {

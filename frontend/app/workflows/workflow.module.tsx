@@ -4,6 +4,7 @@ import Button from '../button.module';
 import Card from '../card';
 import Workflow from '../workflow';
 import React from 'react';
+import { postData } from '../util';
 
 export default ({workflow, setTitleAction, setWorkflowAction}: {
     workflow: Workflow,
@@ -13,21 +14,15 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
     const executeScript = async (index: number) => {
         updateCardLoading(index, true);
         updateCardOutput(index, '')
-        const outputs = []
+        const outputs: string[] = []
         const script = workflow.cards[index].script;
         const data = index > 0 ? workflow.cards[index - 1].output : null;
         for (const line of data ? data.trim().split('\n') : ['']) {
-            try {
-                const response = await fetch('http://localhost:8000/cmd', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({cmd: script.replace('{}', line)}),
+            postData('/cmd', {cmd: script.replace('{}', line)})
+                .then((result: string | any) => {
+                    const output = typeof result !== 'string' ? `Error: ${result.error}` : result;
+                    outputs.push(output);
                 });
-                const result = await response.text();
-                outputs.push(result)
-            } catch (error) {
-                outputs.push(`Error: ${error}`)
-            }
         }
         updateCardOutput(index, outputs.join(''));
         updateCardLoading(index, false);

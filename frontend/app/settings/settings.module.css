@@ -14,5 +14,24 @@
         border: solid 1px var(--foreground);
         border-radius: 4px;
         width: 200px;
+        padding: 2px 8px;
+    }
+
+    .agents {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        .agent {
+            border: solid 1px var(--foreground);
+            border-radius: 8px;
+            padding: clamp(4px, 2.0vw, 8px) clamp(16px, 2.0vw, 24px);
+            width: fit-content;
+
+            .remove {
+                float: right;
+                cursor: pointer;
+                padding: 0 8px;
+            }
+        }
     }
 }

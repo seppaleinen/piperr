@@ -1,24 +1,14 @@
 import Workflow from '../workflow';
 import styles from './persist.module.css';
 import React from 'react';
+import { postData } from '../util';
 
 export default function PersistWorkflows(
     {workflows}:
     { workflows: Workflow[] }
 ) {
     const persistWorkflows = async () => {
-        try {
-            console.log(`Persisting workflows: ${JSON.stringify(workflows)}`);
-            const response = await fetch('http://localhost:8000/persist/workflows', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(workflows),
-            });
-            const result = await response.text();
-            console.log(`Result: ${result}`)
-        } catch (error) {
-            console.error(`Error: ${error}`)
-        }
+        await postData('/persist/workflows', workflows);
     };
 
     return (
