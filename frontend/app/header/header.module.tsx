@@ -70,10 +70,10 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                     <li>
                         <Link to={'/about'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>About</Link>
                     </li>
+                    <hr/>
                     <li onClick={() => createNewWorkflowAndClose()}>
                         <div>Create new workflow</div>
                     </li>
-                    <hr/>
                     {workflows
                         .map((workflow, index) =>
                             (

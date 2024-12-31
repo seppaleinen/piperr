@@ -9,19 +9,38 @@ export default () => {
 
     useEffect(() => {
         async function fetchSettings() {
-            const result = await getData('/settings');
-            if (Object.keys(result).length > 0 || result.agents.length > 0) {
-                setSettings(result);
-            }
+            return await getData('/settings');
         }
 
-        fetchSettings().then(() => {
-        });
+        fetchSettings()
+            .then(result => {
+                if (Object.keys(result).length > 0 && result.agents.length > 0) {
+                    setSettings(result);
+                }
+            });
     }, [])
 
     const persistSettings = async () => {
         await postData('/persist/settings', settings);
     };
+
+    const doStuff = (agent: Agent, field: keyof Agent, text: string, type: string = 'text') => {
+        return (
+            <div>
+                <span>{text}</span>
+                <input type={type}
+                       value={String(agent[field])}
+                       className={styles.input}
+                       onChange={(e) => {
+                           const updatedAgent = {...agent, [field]: e.target.value};
+                           setSettings({
+                               ...settings,
+                               agents: settings.agents.map(a => a.id === agent.id ? updatedAgent : a)
+                           });
+                       }}/>
+            </div>
+        )
+    }
 
     return (
         <section className={styles.settings}>
@@ -29,7 +48,7 @@ export default () => {
             <hr/>
             <div className={styles.agents}>
                 {settings.agents
-                    .sort((a, b) => b.id - a.id)
+                    .sort((a, b) => a.id - b.id)
                     .map(agent => {
                         return (
                             <div className={styles.agent} key={agent.id}>
@@ -42,29 +61,14 @@ export default () => {
                                          )
                                      }}>X
                                 </div>
-                                <span>Agent IP: </span>
-                                <input type={"url"}
-                                       value={agent.ip}
-                                       onChange={(e) => {
-                                           const updatedAgent = agent;
-                                           updatedAgent.ip = e.target.value;
-                                           setSettings({
-                                               ...settings,
-                                               agents: settings.agents.map(a => a.id === agent.id ? updatedAgent : a)
-                                           });
-                                       }}/>
-                                <p>sudo password: </p>
-                                <input type={"text"}
-                                       value={agent.sudo_password}
-                                       className={styles.password}
-                                       onChange={(e) => {
-                                           const updatedAgent = agent;
-                                           updatedAgent.sudo_password = e.target.value;
-                                           setSettings({
-                                               ...settings,
-                                               agents: settings.agents.map(a => a.id === agent.id ? updatedAgent : a)
-                                           });
-                                       }}/>
+                                <br/>
+                                {doStuff(agent, 'nickname', 'Server nickname: ')}
+                                {doStuff(agent, 'ip', 'Agent IP: ')}
+                                <div>OS: {agent.os}</div>
+                                <div>SHELL: {agent.shell}</div>
+                                <div>username: {agent.username}</div>
+                                <div>main: {agent.main ? 'Yes' : 'No'}</div>
+                                {doStuff(agent, 'sudo_password', 'Sudo password: ', 'text')}
                             </div>
                         )
                     })}
@@ -72,7 +76,7 @@ export default () => {
             <ButtonModule action={() => {
                 setSettings({
                     ...settings,
-                    agents: settings.agents.concat(new Agent())
+                    agents: settings.agents.concat(new Agent(settings.agents.length))
                 });
             }}
                           text={"Add Agent"}

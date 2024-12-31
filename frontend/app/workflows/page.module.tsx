@@ -2,7 +2,7 @@ import styles from './page.module.css';
 import React, { useEffect, useState } from 'react';
 import WorkflowModule from './workflow.module';
 import Header from '../header/header.module';
-import { Workflow } from '../domains';
+import { Agent, Settings, Workflow } from '../domains';
 import '../globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AboutModule from '../about.module';
@@ -12,10 +12,11 @@ import { getData } from '../util';
 export default () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
+    const [agent, setAgent] = useState(new Agent());
 
     useEffect(() => {
         async function fetchWorkflows() {
-            getData('/workflows')
+            getData(`/workflows/${agent.id}`)
                 .then((result: Workflow[]) => {
                     if (result.length === 0) {
                         result = [new Workflow()];
@@ -24,8 +25,20 @@ export default () => {
                 });
         }
 
-        fetchWorkflows().then(() => {
-        });
+        async function fetchSettings() {
+            getData('/settings')
+                .then((result: Settings) => {
+                    if (Object.keys(result).length > 0 && result.agents.length > 0) {
+                        setAgent(result.agents.filter(agent => agent.id === 0)[0]);
+                    }
+                });
+        }
+
+        fetchWorkflows()
+            .then(() => {
+            });
+        fetchSettings()
+            .then(() => {});
     }, [])
 
     const setTitle = (title: string) => {

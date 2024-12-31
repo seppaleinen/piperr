@@ -1,7 +1,7 @@
 import json
+import socket
 import sqlite3
 import subprocess
-import socket
 
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
@@ -41,24 +41,25 @@ def cmd():
     except subprocess.CalledProcessError as e:
         return e.output
 
-@app.route("/workflows", methods=['GET'], endpoint='get_workflows')
-def get_workflows():
+@app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')
+def get_workflows(agent_id):
     with get_db() as conn:
         conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
         c = conn.cursor()
         c.execute('''
-            SELECT 
-                w.title AS title,
-                json_group_array(
-                    json_object(
-                        'card_index', c.card_index,
-                        'script', c.script
-                    )
-                ) AS cards
-            FROM workflows w
-            LEFT OUTER JOIN cards c ON c.workflow_title = w.title
-            GROUP BY w.title;
-        ''')
+        SELECT
+            w.title AS title,
+            json_group_array(
+                json_object(
+                    'card_index', c.card_index,
+                    'script', c.script
+                )
+            ) AS cards
+                FROM workflows w
+                LEFT OUTER JOIN cards c ON c.workflow_title = w.title
+                WHERE w.agent_id = ?
+                GROUP BY w.title;
+                 ''', (int(agent_id),))
 
         workflows = c.fetchall()
 
@@ -71,6 +72,15 @@ def get_workflows():
 
     return jsonify(response)  # Convert to a Flask JSON response
 
+
+def execute_command(cmd):
+    try:
+        return subprocess.check_output([cmd], shell=True)
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: %s. %s" % (cmd, e))
+        return None
+
+
 @app.route("/settings", methods=['GET'], endpoint='get_settings')
 def get_settings():
     with get_db() as conn:
@@ -82,8 +92,13 @@ def get_settings():
                 json_group_array(
                     json_object(
                         'id', a.id,
+                        'sudo_password', a.sudo_password,
+                        'main', a.main,
                         'ip', a.ip,
-                        'sudo_password', a.sudo_password
+                        'nickname', a.nickname,
+                        'os', a.os,
+                        'shell', a.shell,
+                        'username', a.username
                     )
                 ) AS agents
             FROM settings s
@@ -96,11 +111,17 @@ def get_settings():
     response = {}
     for row in workflows:
         response['id'] = row["id"]
-        for ab in json.loads(row["agents"]):
-            a = ab
+        for a in json.loads(row["agents"]):
             agent = {'ip': a.get('ip') if a.get('ip') else get_ip(),
                      'sudo_password': a.get('sudo_password'),
-                     'id': a.get('id')}
+                     'id': a.get('id'),
+                     'main': a.get('main', False),
+                     'nickname': a.get('nickname', ''),
+                     'os': a.get('os') if a.get('os') else execute_command("uname -o").strip().decode("utf-8"),
+                     'shell': a.get('shell') if a.get('shell') else execute_command("echo $SHELL").strip().decode("utf-8"),
+                     'username': a.get('username') if a.get('username') else execute_command("whoami").strip().decode("utf-8"),
+                     }
+            print("Agent: %s" % agent)
             response['agents'] = response.get('agents', []) + [agent]
 
     return jsonify(response)  # Convert to a Flask JSON response
@@ -115,7 +136,8 @@ def persist_workflows():
     c.execute('DELETE FROM workflows')
     c.execute('DELETE FROM cards')
     for workflow in list(data):
-        c.execute('INSERT OR REPLACE INTO workflows (title) VALUES (?)', (workflow.get('title'),))
+        c.execute('INSERT OR REPLACE INTO workflows (agent_id, title) VALUES (?, ?)',
+                  (workflow.get('agent').get('id'), workflow.get('title'),))
         for idx, card in enumerate(workflow.get('cards')):
             c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
                       (workflow.get('title'), idx, card.get('script')))
@@ -126,12 +148,20 @@ def persist_workflows():
 def persist_settings():
     data = request.get_json()
     with get_db() as c:
-        c.execute('DELETE FROM agents')
-        c.execute('DELETE FROM settings')
-
         c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (1,))
         for agent in data.get('agents', []):
-            c.execute('INSERT OR REPLACE INTO agents (id, ip, settings_id, sudo_password) VALUES (?, ?, ?, ?)',
-                      (agent.get('id'), agent.get('ip', None), 1, agent.get('sudo_password')))
+            c.execute('INSERT OR REPLACE INTO agents '
+                      '(id, ip, settings_id, sudo_password, main, nickname, os, shell, username) VALUES '
+                      '(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                      (
+                            agent.get('id'),
+                            agent.get('ip', None),
+                            1,
+                            agent.get('sudo_password'),
+                            agent.get('main', agent['id'] == 0),
+                            agent.get('nickname', None),
+                            agent.get('os', None),
+                            agent.get('shell', None),
+                            agent.get('username', None)))
         c.commit()
     return "OK"

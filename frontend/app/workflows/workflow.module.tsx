@@ -46,7 +46,6 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
         updatedCards[index].script = script;
         workflow.cards = updatedCards;
         setWorkflowAction(workflow);
-
     };
 
     const updateCardLoading = (index: number, loading: boolean) => {
@@ -94,6 +93,13 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
                 />
             ))}
             <Button action={executeAllScripts} text={"Execute all steps"}/>
+            <div>
+                <span>Automate the script: </span>
+                <select name={"automate"}>
+                    <option value={"no"}>No</option>
+                    <option value={"yes"}>Yes</option>
+                </select>
+            </div>
         </div>
     );
 }

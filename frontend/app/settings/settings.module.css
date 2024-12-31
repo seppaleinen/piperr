@@ -10,11 +10,12 @@
         margin-bottom: 24px;
     }
 
-    .password {
+    .input {
         border: solid 1px var(--foreground);
         border-radius: 4px;
-        width: 200px;
-        padding: 2px 8px;
+        padding: 0 4px;
+        margin-bottom: 4px;
+        width: 130px;
     }
 
     .agents {

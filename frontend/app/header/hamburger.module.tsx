@@ -6,7 +6,7 @@ export default (
     { isOpen: boolean }) =>
     (
         <>
-            <div className={`${styles.icon} ${styles.navIcon} ${isOpen && 'open'}`}>
+            <div className={`${styles.navIcon} ${isOpen && styles.open}`}>
                 <span></span>
                 <span></span>
                 <span></span>
