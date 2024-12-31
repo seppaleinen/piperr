@@ -1,5 +1,4 @@
 .button {
-    vertical-align: bottom;
     background-color: var(--primary); /* Corresponds to bg-blue-500 */
     color: var(--background); /* Corresponds to text-white */
     font-weight: bold; /* Corresponds to font-bold */

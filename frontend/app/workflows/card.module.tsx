@@ -1,30 +1,32 @@
 import styles from './card.module.css';
 import Button from '../button.module';
 import React from 'react';
+import { Card } from '../domains';
+
+function getElement(output: string | null) {
+    console.log("OUTPUT2:" + output);
+    return <></>;
+}
 
 export default ({
                     index,
-                    script,
-                    output,
+                    card,
                     addCardAction,
                     removeCardAction,
                     updateCardScriptAction,
                     executeScriptAction,
-                    loading,
                 }: {
     index: number;
-    script: string;
-    output: string | null;
+    card: Card;
     addCardAction: () => void;
     removeCardAction: () => void;
     updateCardScriptAction: (index: number, script: string) => void;
     executeScriptAction: () => Promise<void>;
-    loading: boolean;
 }) => (
     <div className={styles.card}>
         <div className={styles.outerScript}>
             <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg"
-                 className={loading ? styles.showLoading : styles.hide}>
+                 className={card.loading ? styles.showLoading : styles.hide}>
                 <rect
                     rx="8"
                     ry="8"
@@ -35,9 +37,9 @@ export default ({
                 />
             </svg>
             <textarea
-                value={script}
+                value={card.script}
                 onChange={(e) => updateCardScriptAction(index, e.target.value)}
-                className={`${styles.script} ${loading || styles.showBorder}`}
+                className={`${styles.script} ${card.loading || styles.showBorder}`}
                 placeholder="Enter script here..."
             ></textarea>
         </div>
@@ -46,6 +48,7 @@ export default ({
             <Button action={removeCardAction} text={"Remove step"} style={styles.removeCard}/>
             <Button action={executeScriptAction} text={"Execute step"} style={styles.execute}/>
         </div>
-        {output && <div className={styles.output}>{output}</div>}
+        {getElement(card.output)}
+        {card.output && <div className={styles.output}>{card.output}</div>}
     </div>
 )

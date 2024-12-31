@@ -11,55 +11,48 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
     setWorkflowAction: (workflow: Workflow) => void
 }) => {
     const executeScript = async (index: number) => {
-        updateCardLoading(index, true);
-        updateCardOutput(index, '')
-        const outputs: string[] = []
+        updateCardOutput(index, '', true)
         const script = workflow.cards[index].script;
         const data = index > 0 ? workflow.cards[index - 1].output : null;
         for (const line of data ? data.trim().split('\n') : ['']) {
             postData('/cmd', {cmd: script.replace('{}', line)})
                 .then((result: string | any) => {
                     const output = typeof result !== 'string' ? `Error: ${result.error}` : result;
+                    console.log("OUTPUT: " + output)
+                    const outputs: string[] = []
                     outputs.push(output);
+                    updateCardOutput(index, outputs.join(''), false);
                 });
         }
-        updateCardOutput(index, outputs.join(''));
-        updateCardLoading(index, false);
-        setWorkflowAction(workflow);
     };
 
 
     const addCardAction = () => {
-        workflow.cards = [...workflow.cards, {script: '', output: null, loading: false}];
-        setWorkflowAction(workflow);
+        setWorkflowAction({...workflow,
+            cards: [...workflow.cards, new Card()]
+        });
     };
 
     const removeCardAction = (index: number) => {
-        const updatedCards = [...workflow.cards];
-        updatedCards.splice(index, 1);
-        workflow.cards = updatedCards;
-        setWorkflowAction(workflow);
+        const updatedCards = workflow.cards.filter((_, i) => i !== index);
+
+        setWorkflowAction({ ...workflow, cards: updatedCards });
     };
 
     const updateCardScript = (index: number, script: string) => {
-        const updatedCards = [...workflow.cards];
-        updatedCards[index].script = script;
-        workflow.cards = updatedCards;
-        setWorkflowAction(workflow);
+        const updatedCards = workflow.cards.map((card, i) =>
+            i === index ? { ...card, script } : card
+        );
+
+        setWorkflowAction({ ...workflow, cards: updatedCards });
     };
 
-    const updateCardLoading = (index: number, loading: boolean) => {
-        const updatedCards = [...workflow.cards];
-        updatedCards[index].loading = loading;
-        workflow.cards = updatedCards;
-        setWorkflowAction(workflow);
-    };
+    const updateCardOutput = (index: number, output: string, loading: boolean) => {
+        const updatedCards = workflow.cards.map((card, i) =>
+            i === index ? { ...card, output, loading } : card
+        );
 
-    const updateCardOutput = (index: number, output: string) => {
-        const updatedCards = [...workflow.cards];
-        updatedCards[index].output = output;
-        workflow.cards = updatedCards;
-        setWorkflowAction(workflow);
+        setWorkflowAction({ ...workflow, cards: updatedCards });
     };
 
     const updateTitle = (title: string) => {
@@ -83,9 +76,7 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
                 <CardModule
                     key={index}
                     index={index}
-                    script={card.script}
-                    output={card.output}
-                    loading={card.loading}
+                    card={card}
                     addCardAction={addCardAction}
                     removeCardAction={() => removeCardAction(index)}
                     updateCardScriptAction={updateCardScript}
@@ -94,11 +85,6 @@ export default ({workflow, setTitleAction, setWorkflowAction}: {
             ))}
             <Button action={executeAllScripts} text={"Execute all steps"}/>
             <div>
-                <span>Automate the script: </span>
-                <select name={"automate"}>
-                    <option value={"no"}>No</option>
-                    <option value={"yes"}>Yes</option>
-                </select>
             </div>
         </div>
     );

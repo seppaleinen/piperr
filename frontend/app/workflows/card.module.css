@@ -19,6 +19,9 @@
     position: absolute;
 }
 
+svg {
+    position: absolute;
+}
 .line {
     stroke-dasharray: 260;
     stroke-width: 8px;
@@ -49,6 +52,7 @@
     width: 100%;
     padding: 8px;
     height: 136px;
+    background-color: color-mix(in hsl, var(--background), white 40%);
 }
 
 .showBorder {

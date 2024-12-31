@@ -43,10 +43,11 @@ export default () => {
 
     const setTitle = (title: string) => {
         if (title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
-            const updatedWorkflows = [...workflows];
-            updatedWorkflows[workflowIndex].title = title;
-            setWorkflows(updatedWorkflows);
-        }
+            setWorkflows((prevWorkflows) =>
+                prevWorkflows.map((workflow, index) =>
+                    index === workflowIndex ? { ...workflow, title } : workflow
+                )
+            );        }
     }
 
     const chooseWorkflow = (title: string) => {
@@ -82,9 +83,9 @@ export default () => {
     }
 
     const setWorkflowAction = (workflow: Workflow) => {
-        const updatedWorkflows = [...workflows];
-        updatedWorkflows[workflowIndex] = workflow;
-        setWorkflows(updatedWorkflows);
+        setWorkflows((prevWorkflows) =>
+            prevWorkflows.map((w, i) => (i === workflowIndex ? workflow : w))
+        );
     }
 
     const workflowModule = <WorkflowModule workflow={workflows[workflowIndex]}

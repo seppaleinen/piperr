@@ -3,6 +3,10 @@
     border: 8px;
     border-radius: 8px;
     margin-right: clamp(24px, 5vw, 80px);
+
+    svg {
+        position: relative;
+    }
 }
 
 .icon:hover {

