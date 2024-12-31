@@ -41,9 +41,11 @@ export default ({
                 placeholder="Enter script here..."
             ></textarea>
         </div>
-        <Button action={executeScriptAction} text={"Execute step"} style={styles.execute}/>
-        <Button action={addCardAction} text={"Add step"} style={styles.addCard}/>
-        <Button action={removeCardAction} text={"Remove step"} style={styles.removeCard}/>
+        <div className={styles.buttons}>
+            <Button action={addCardAction} text={"Add step"} style={styles.addCard}/>
+            <Button action={removeCardAction} text={"Remove step"} style={styles.removeCard}/>
+            <Button action={executeScriptAction} text={"Execute step"} style={styles.execute}/>
+        </div>
         {output && <div className={styles.output}>{output}</div>}
     </div>
 )

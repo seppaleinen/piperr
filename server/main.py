@@ -37,7 +37,7 @@ def get_db():
 def cmd():
     data = request.get_json()
     try:
-        return subprocess.check_output([data['cmd']], shell=True)
+        return subprocess.check_output([data['cmd']])
     except subprocess.CalledProcessError as e:
         return e.output
 
@@ -73,9 +73,9 @@ def get_workflows(agent_id):
     return jsonify(response)  # Convert to a Flask JSON response
 
 
-def execute_command(cmd):
+def execute_command(command):
     try:
-        return subprocess.check_output([cmd], shell=True)
+        return subprocess.check_output([command])
     except subprocess.CalledProcessError as e:
         print("Error executing command: %s. %s" % (cmd, e))
         return None

@@ -1,12 +1,12 @@
 .card {
-    padding-bottom: 32px;
     display: grid;
     grid-template-areas:
-        "outerScript addCard"
-        "outerScript removeCard"
-        "outerScript execute"
+        "outerScript buttons"
+        "outerScript buttons"
+        "outerScript buttons"
         "output      output";
     grid-template-columns: 85% 14.3%;
+    justify-content: start;
     gap: 8px;
 }
 
@@ -77,27 +77,38 @@
     grid-area: removeCard;
 }
 
-.execute {
-    grid-area: execute;
+.buttons {
+    grid-area: buttons;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 8px;
+
+    button {
+        width: 100%;
+        font-size: clamp(0.9rem, 1.5vw, 1rem);
+        padding: clamp(4px, -0.571rem + 1.429vw, 12px) clamp(4px, 1.0vw, 24px);
+    }
 }
 
-.addCard {
-    grid-area: addCard;
-}
-
-.removeCard {
-    grid-area: removeCard;
-}
-
-@media (max-width: 856px) {
+@media (max-width: 658px) {
     .card {
         padding-bottom: 20px;
         display: grid;
         grid-template-areas:
         "outerScript    outerScript outerScript"
         "addCard        removeCard  execute"
-        "output         output      output";
+        "buttons        buttons     buttons";
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
+
+        .buttons {
+            flex-direction: row;
+            justify-content: start;
+
+            button {
+                font-size: 1rem;
+            }
+        }
     }
 }

@@ -59,7 +59,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
 
     return (
         <header className={styles.header} ref={wrapperRef}>
-            <div className={`${styles.navigation}`}>
+            <nav className={`${styles.navigation}`}>
                 <ul className={hamburgerOpen ? '' : styles.hide}>
                     <li>
                         <Link to={'/'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>Home</Link>
@@ -91,7 +91,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
                 <div className={styles.hamburger} onClick={toggleHamburger}>
                     <Hamburger isOpen={hamburgerOpen}/>
                 </div>
-            </div>
+            </nav>
             <div className={styles.title}>
                 PIPERR
             </div>

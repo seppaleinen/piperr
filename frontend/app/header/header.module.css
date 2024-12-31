@@ -93,20 +93,17 @@
     border-radius: 4px;
 }
 
-.close:active {
-    box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
-}
-
-.close:hover {
+.close:hover:active {
     box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
 }
 
 @media (max-width: 767px) {
-    .navigation ul li:hover {
-        box-shadow: unset;
-    }
-
-    .navigation ul li:active {
-        box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
+    .navigation ul {
+        li:hover {
+            box-shadow: unset;
+        }
+        li:active {
+            box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
+        }
     }
 }
