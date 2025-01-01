@@ -27,7 +27,7 @@ def get_ip():
 
 def get_db():
     if 'db' not in g:
-        db = 'file::memory:?cache=shared' if app.testing == True else 'workflows.db'
+        db = 'file::memory:?cache=shared' if app.testing else 'workflows.db'
         g.db = sqlite3.connect(db)
         with current_app.open_resource("schema.sql") as f:
             g.db.executescript(f.read().decode("utf8"))

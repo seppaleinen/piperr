@@ -12,3 +12,8 @@ dependencies = [
     "behave==1.2.6",        # BDD testing
     "pyhamcrest==2.1.0",    # Matchers for testing
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.4",
+]

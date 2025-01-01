@@ -1,5 +1,6 @@
 [{
   "title":"title",
+  "agent": {"id": 0},
   "cards":[{
 	"script":"script"
   }]

@@ -2,7 +2,7 @@ import json
 import sqlite3
 
 from behave import given, when, then
-from hamcrest import *
+from hamcrest import assert_that, equal_to, not_none
 from main import app, get_db
 from os.path import dirname, join as joinpath
 
@@ -11,18 +11,23 @@ from os.path import dirname, join as joinpath
 def given_workflows_persisted(context):
     with app.app_context():
         c = get_db()
-        c.execute('INSERT OR REPLACE INTO workflows (title) VALUES (?)', ("title",))
+        c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (0,))
+        c.execute('INSERT OR REPLACE INTO agents '
+                  '(id, settings_id, sudo_password, main, nickname, ip, os, shell, username) VALUES '
+                  '(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                  (0, 0, 'password', 1, 'nickname', '192.168', 'os', 'shell', 'username'))
+        c.execute('INSERT OR REPLACE INTO workflows (title, agent_id) VALUES (?, ?)', ("title", 0))
         c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
                   ('title', 0, 'echo hej'))
         c.commit()
 
 
 @when(u'{path} is requested')
-def url_is_called_with(context, path):
+def url_is_called_with_get(context, path):
     context.response = context.client.get(path)
 
 @when(u'{path} is requested with json')
-def url_is_called_with(context, path):
+def url_is_called_with_post(context, path):
     context.response = context.client.post(path, json=json.loads(context.text))
 
 @then(u'I should get a {http_status} response')
@@ -62,7 +67,7 @@ def expect_title_to_be_in_db(context, expected_title):
 
 
 @then('database should contain workflow with script "{expected_script}"')
-def expect_title_to_be_in_db(context, expected_script):
+def expect_script_to_be_in_db(context, expected_script):
     with app.app_context():
         conn = get_db()
         conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
@@ -85,6 +90,8 @@ def settings_are_persisted(context):
     with app.app_context():
         c = get_db()
         c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (1,))
-        c.execute('INSERT OR REPLACE INTO agents (ip, settings_id, sudo_password) VALUES (?, ?, ?)',
-                  ('192.168.1.100', 1, "password"))
+        c.execute('INSERT OR REPLACE INTO agents '
+                  '(id, settings_id, sudo_password, main, nickname, ip, os, shell, username) VALUES '
+                  '(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                  (0, 1, 'password', 1, 'nickname', '192.168', 'os', 'shell', 'username'))
         c.commit()

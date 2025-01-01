@@ -1,8 +1,6 @@
-import os
-import tempfile
 from behave import fixture, use_fixture
 # flaskr is the sample application we want to test
-from main import app, get_db
+from main import app
 
 
 @fixture

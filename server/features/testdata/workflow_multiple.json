@@ -1,5 +1,6 @@
 [{
   "title":"title",
+  "agent": {"id": 0},
   "cards":[{
 	"script":"script",
 	"output":null,
@@ -7,6 +8,7 @@
   }]
 },{
   "title":"title2",
+  "agent": {"id": 1},
   "cards":[{
 	"script":"script2",
 	"output":null,

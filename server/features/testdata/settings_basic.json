@@ -2,8 +2,14 @@
   "id": 2,
   "agents": [
 	{
+	  "id": "0",
 	  "ip": "192.168.1.101",
-	  "sudo_password": "password2"
+	  "sudo_password": "password2",
+	  "main": true,
+	  "nickname": "nickname",
+	  "os": "Darwin",
+	  "shell": "bash",
+	  "username": "username"
 	}
   ]
 }

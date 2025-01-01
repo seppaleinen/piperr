@@ -2,7 +2,7 @@ Feature: Workflows
 
   Scenario: Can fetch a list of workflows
     Given Some workflows are persisted
-    When /workflows is requested
+    When /workflows/0 is requested
     Then I should get a 200 response
     And the response should be [{"cards":[{"card_index":0,"script":"echo hej"}],"title":"title"}]
 
