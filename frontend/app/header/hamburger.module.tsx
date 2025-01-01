@@ -1,7 +1,6 @@
 import styles from './hamburger.module.css';
-import React from 'react';
 
-export default (
+const HamburgerModule = (
     {isOpen}:
     { isOpen: boolean }) =>
     (
@@ -13,3 +12,5 @@ export default (
             </div>
         </>
     )
+
+export default HamburgerModule;

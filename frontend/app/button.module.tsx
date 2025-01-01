@@ -1,7 +1,6 @@
 import styles from './button.module.css';
-import React from 'react';
 
-export default ({action, text, style}: {
+const ButtonModule = ({action, text, style}: {
     action: () => void,
     text: string,
     style?: string;
@@ -10,3 +9,5 @@ export default ({action, text, style}: {
         {text}
     </button>
 )
+
+export default ButtonModule;

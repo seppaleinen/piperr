@@ -1,6 +1,5 @@
 import { Workflow } from '../domains';
 import styles from './persist.module.css';
-import React from 'react';
 import { postData } from '../util';
 
 export default function PersistWorkflows(

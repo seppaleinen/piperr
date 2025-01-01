@@ -4,7 +4,7 @@ import ButtonModule from '../button.module';
 import { Agent, Settings } from '../domains';
 import { getData, postData } from '../util';
 
-export default () => {
+const SettingsModule = () => {
     const [settings, setSettings] = React.useState(new Settings());
 
     useEffect(() => {
@@ -87,3 +87,5 @@ export default () => {
         </section>
     )
 }
+
+export default SettingsModule;

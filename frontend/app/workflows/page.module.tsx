@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import WorkflowModule from './workflow.module';
 import Header from '../header/header.module';
 import { Agent, Settings, Workflow } from '../domains';
@@ -9,7 +9,7 @@ import AboutModule from '../about.module';
 import SettingsModule from '../settings/settings.module';
 import { getData } from '../util';
 
-export default () => {
+const PageModule = () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
     const [agent, setAgent] = useState(new Agent());
@@ -39,7 +39,7 @@ export default () => {
             });
         fetchSettings()
             .then(() => {});
-    }, [])
+    }, [agent.id])
 
     const setTitle = (title: string) => {
         if (title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
@@ -51,12 +51,8 @@ export default () => {
     }
 
     const chooseWorkflow = (title: string) => {
-        workflows
-            .map((workflow, index) => {
-                if (workflow.title === title) {
-                    setWorkflowIndex(index);
-                }
-            });
+        const index = workflows.findIndex(workflow => workflow.title === title);
+        setWorkflowIndex(index);
     }
 
     const createNewWorkflowAction = () => {
@@ -111,3 +107,5 @@ export default () => {
         </div>
     );
 }
+
+export default PageModule;

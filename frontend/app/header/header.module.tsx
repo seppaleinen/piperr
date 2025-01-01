@@ -1,11 +1,11 @@
 import Hamburger from './hamburger.module';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Workflow } from '../domains';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
+const HeaderModule = ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
     workflows: Workflow[],
     chooseWorkflowAction: (title: string) => void,
     createNewWorkflowAction: () => void,
@@ -31,7 +31,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         navigate('/');
     }
 
-    const closeNavigationOnClickOutside = (ref: any, onClickOutside: any) => {
+    const useCloseNavigationOnClickOutside = (ref: any, onClickOutside: any) => {
         useEffect(() => {
             /**
              * Invoke Function onClick outside of element
@@ -53,7 +53,7 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         }, [ref, onClickOutside]);
     }
 
-    closeNavigationOnClickOutside(wrapperRef, () => {
+    useCloseNavigationOnClickOutside(wrapperRef, () => {
         setHamburgerOpen(false);
     });
 
@@ -101,3 +101,5 @@ export default ({workflows, chooseWorkflowAction, createNewWorkflowAction, remov
         </header>
     );
 }
+
+export default HeaderModule;

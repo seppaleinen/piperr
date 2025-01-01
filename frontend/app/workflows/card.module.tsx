@@ -1,9 +1,8 @@
 import styles from './card.module.css';
 import Button from '../button.module';
-import React from 'react';
 import { Agent, Card } from '../domains';
 
-export default ({
+const CardModule = ({
                     index,
                     card,
                     agent,
@@ -52,3 +51,5 @@ export default ({
         {card.output && <div className={styles.output}>{card.output}</div>}
     </div>
 )
+
+export default CardModule;

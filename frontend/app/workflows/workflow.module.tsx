@@ -2,10 +2,9 @@ import styles from './workflow.module.css';
 import CardModule from './card.module';
 import Button from '../button.module';
 import { Agent, Card, Workflow } from '../domains';
-import React from 'react';
 import { postData } from '../util';
 
-export default ({agent, workflow, setTitleAction, setWorkflowAction}: {
+const WorkflowModule = ({agent, workflow, setTitleAction, setWorkflowAction}: {
     agent: Agent,
     workflow: Workflow,
     setTitleAction: (titles: string) => void,
@@ -91,3 +90,5 @@ export default ({agent, workflow, setTitleAction, setWorkflowAction}: {
         </div>
     );
 }
+
+export default WorkflowModule;

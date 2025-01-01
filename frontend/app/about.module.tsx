@@ -1,7 +1,6 @@
-import React from 'react';
 import styles from './about.module.css';
 
-export default () => (
+const AboutModule = () => (
     <section className={styles.about}>
         <h1>About Piperr</h1>
         <p>
@@ -14,7 +13,7 @@ export default () => (
         </p>
         <p>
             Whether it’s scheduling daily updates <code>sudo apt update -y</code> or running intricate
-            manual commands like <code>find ~ -type d -name .git -exec sh -c 'cd &#123;&#125;; git pull;' \;</code>, the
+            manual commands like <code>find ~ -type d -name .git -exec sh -c &apos;cd &#123;&#125;; git pull;&apos; \;</code>, the
             tool
             provides
             flexibility and precision for all your needs.
@@ -42,3 +41,5 @@ export default () => (
         </p>
     </section>
 )
+
+export default AboutModule;
