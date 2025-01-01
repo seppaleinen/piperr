@@ -121,7 +121,6 @@ def get_settings():
                      'shell': a.get('shell') if a.get('shell') else execute_command("echo $SHELL").strip().decode("utf-8"),
                      'username': a.get('username') if a.get('username') else execute_command("whoami").strip().decode("utf-8"),
                      }
-            print("Agent: %s" % agent)
             response['agents'] = response.get('agents', []) + [agent]
 
     return jsonify(response)  # Convert to a Flask JSON response
@@ -132,16 +131,16 @@ def persist_workflows():
     if not data:
         return {"error": "Invalid payload"}, 400
 
-    c = get_db()
-    c.execute('DELETE FROM workflows')
-    c.execute('DELETE FROM cards')
-    for workflow in list(data):
-        c.execute('INSERT OR REPLACE INTO workflows (agent_id, title) VALUES (?, ?)',
-                  (workflow.get('agent').get('id'), workflow.get('title'),))
-        for idx, card in enumerate(workflow.get('cards')):
-            c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
-                      (workflow.get('title'), idx, card.get('script')))
-    c.commit()
+    with get_db() as c:
+        c.execute('DELETE FROM workflows')
+        c.execute('DELETE FROM cards')
+        for workflow in list(data):
+            c.execute('INSERT OR REPLACE INTO workflows (agent_id, title) VALUES (?, ?)',
+                      (workflow.get('agent').get('id'), workflow.get('title'),))
+            for idx, card in enumerate(workflow.get('cards')):
+                c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
+                          (workflow.get('title'), idx, card.get('script')))
+        c.commit()
     return "OK"
 
 @app.route("/persist/settings", methods=['POST'], endpoint='persist_settings')

@@ -1,5 +1,5 @@
 .about {
-    padding: 0 clamp(0px, 5vw, 80px);
+    padding: 24px clamp(0px, 5vw, 80px);
 
     h1 {
         text-align: center;

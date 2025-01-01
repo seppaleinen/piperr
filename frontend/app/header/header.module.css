@@ -40,7 +40,7 @@
     }
 }
 
-.navigation ul li div {
+.navigation ul li div:not(.name) {
     list-style-type: none;
     font-weight: bolder;
     font-size: 24px; /* Slightly larger text */
@@ -90,6 +90,7 @@
 .name {
     width: 100%;
     margin-left: 16px;
+    font-size: 1.2rem;
 }
 
 .close {
