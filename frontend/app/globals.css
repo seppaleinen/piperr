@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 :root {
-    --background: #caf0f8;
-    --foreground: #03045e;
-    --primary: #0096c7;
+    --background: #414744;
+    --foreground: #F6F7F8;
+    --primary: #B1906B;
+    --secondary: #92A7AA;
+    --shaded-background: var(--secondary);
+    --shaded-primary: color-mix(in hsl, var(--primary), black 20%)
 }
 
 @media (prefers-color-scheme: dark) {

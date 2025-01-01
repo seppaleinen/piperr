@@ -88,7 +88,8 @@ export default () => {
         );
     }
 
-    const workflowModule = <WorkflowModule workflow={workflows[workflowIndex]}
+    const workflowModule = <WorkflowModule agent={agent}
+                                           workflow={workflows[workflowIndex]}
                                            setTitleAction={setTitle}
                                            setWorkflowAction={setWorkflowAction}/>;
     return (

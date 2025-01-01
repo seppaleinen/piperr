@@ -1,16 +1,12 @@
 import styles from './card.module.css';
 import Button from '../button.module';
 import React from 'react';
-import { Card } from '../domains';
-
-function getElement(output: string | null) {
-    console.log("OUTPUT2:" + output);
-    return <></>;
-}
+import { Agent, Card } from '../domains';
 
 export default ({
                     index,
                     card,
+                    agent,
                     addCardAction,
                     removeCardAction,
                     updateCardScriptAction,
@@ -18,6 +14,7 @@ export default ({
                 }: {
     index: number;
     card: Card;
+    agent: Agent;
     addCardAction: () => void;
     removeCardAction: () => void;
     updateCardScriptAction: (index: number, script: string) => void;
@@ -25,6 +22,10 @@ export default ({
 }) => (
     <div className={styles.card}>
         <div className={styles.outerScript}>
+            <div className={styles.tags}>
+                <div>{agent.shell}</div>
+                <div>{agent.os}</div>
+            </div>
             <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg"
                  className={card.loading ? styles.showLoading : styles.hide}>
                 <rect
@@ -48,7 +49,6 @@ export default ({
             <Button action={removeCardAction} text={"Remove step"} style={styles.removeCard}/>
             <Button action={executeScriptAction} text={"Execute step"} style={styles.execute}/>
         </div>
-        {getElement(card.output)}
         {card.output && <div className={styles.output}>{card.output}</div>}
     </div>
 )

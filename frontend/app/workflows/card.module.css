@@ -13,15 +13,25 @@
 .outerScript {
     position: relative;
     grid-area: outerScript;
+
+    .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+
+        div {
+            padding: 4px 8px;
+            background-color: color-mix(in hsl, var(--background), black 50%);
+            border-radius: 8px;
+        }
+    }
+
+    svg {
+        position: absolute;
+    }
 }
 
-.outerScript svg {
-    position: absolute;
-}
-
-svg {
-    position: absolute;
-}
 .line {
     stroke-dasharray: 260;
     stroke-width: 8px;
@@ -51,8 +61,8 @@ svg {
     vertical-align: bottom;
     width: 100%;
     padding: 8px;
-    height: 136px;
-    background-color: color-mix(in hsl, var(--background), white 40%);
+    height: 160px;
+    background-color: color-mix(in hsl, var(--background), white 10%);
 }
 
 .showBorder {
@@ -68,7 +78,7 @@ svg {
     border-radius: 4px;
     white-space: pre-wrap;
     color: var(--foreground);
-    background-color: color-mix(in srgb, var(--primary), white 70%);
+    background-color: color-mix(in srgb, var(--background), white 20%);
     display: inline-block;
     float: left;
     overflow-wrap: break-word;

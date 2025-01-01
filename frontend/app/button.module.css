@@ -1,6 +1,6 @@
 .button {
     background-color: var(--primary); /* Corresponds to bg-blue-500 */
-    color: var(--background); /* Corresponds to text-white */
+    color: var(--foreground); /* Corresponds to text-white */
     font-weight: bold; /* Corresponds to font-bold */
     padding: clamp(4px, -0.571rem + 1.429vw, 24px);
     border-radius: 0.25rem; /* Corresponds to rounded */
@@ -10,7 +10,7 @@
 }
 
 .button:not([disabled]):hover {
-    background-color: #2b6cb0; /* Corresponds to hover:bg-blue-700 */
+    background-color: var(--shaded-primary); /* Corresponds to hover:bg-blue-700 */
 }
 
 .button:active {
