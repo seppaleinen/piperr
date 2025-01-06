@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-    --background: #414744;
-    --foreground: #F6F7F8;
-    --primary: #B1906B;
-    --secondary: #92A7AA;
+    --background: #848A96;
+    --foreground: #F5F7F8;
+    --primary: #CCC672;
+    --secondary: #8292AD;
     --shaded-background: var(--secondary);
     --shaded-primary: color-mix(in hsl, var(--primary), black 20%)
 }
