@@ -1,0 +1,33 @@
+.error {
+    position: absolute;
+    border: var(--error) 1px solid;
+    padding: 8px 24px;
+
+    width: 90%;
+    border-radius: 4px;
+    color: black;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    bottom: 5%; /* Final vertical position */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%) translateY(250%); /* Start below the view */
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Prevent interaction */
+}
+
+.show {
+    transform: translateX(-50%) translateY(0); /* Move upward into position */
+    opacity: 1; /* Fully visible */
+    visibility: visible; /* Allow interaction */
+}
+
+.close {
+    position: absolute;
+    padding: 0 4px;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+}
+
+p, h1 {
+    text-align: center; /* Center the text horizontally */
+}

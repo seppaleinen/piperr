@@ -1,53 +1,53 @@
 import styles from './page.module.css';
 import { useEffect, useState } from 'react';
-import WorkflowModule from './workflow.module';
-import Header from '../header/header.module';
-import { Agent, Settings, Workflow } from '../domains';
-import '../globals.css';
+import WorkflowModule from './workflows/workflow.module';
+import Header from './header/header.module';
+import { Agent, Settings, Workflow } from './domains';
+import './globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import AboutModule from '../about.module';
-import SettingsModule from '../settings/settings.module';
-import { getData } from '../util';
+import AboutModule from './about/about.module';
+import ErrorModule from './error.module';
+import SettingsModule from './settings/settings.module';
+import { getData } from './util';
 
 const PageModule = () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
     const [agent, setAgent] = useState(new Agent());
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchWorkflows() {
-            getData(`/workflows/${agent.id}`)
+        const fetchWorkflows = async () => {
+            getData(`/workflows/${agent.id}`, setError)
                 .then((result: Workflow[]) => {
                     if (result.length === 0) {
                         result = [new Workflow()];
                     }
                     setWorkflows(result.map((workflow: Workflow) => new Workflow(workflow.title, workflow.cards)));
                 });
-        }
+        };
 
-        async function fetchSettings() {
-            getData('/settings')
+        const fetchSettings = async () => {
+            getData('/settings', setError)
                 .then((result: Settings) => {
                     if (Object.keys(result).length > 0 && result.agents.length > 0) {
                         setAgent(result.agents.filter(agent => agent.id === 0)[0]);
                     }
                 });
-        }
+        };
 
-        fetchWorkflows()
-            .then(() => {
-            });
-        fetchSettings()
-            .then(() => {});
+        Promise.all([fetchWorkflows(), fetchSettings()]).then(() => {
+        });
     }, [agent.id])
 
     const setTitle = (title: string) => {
         if (title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
             setWorkflows((prevWorkflows) =>
                 prevWorkflows.map((workflow, index) =>
-                    index === workflowIndex ? { ...workflow, title } : workflow
+                    index === workflowIndex ? {...workflow, title} : workflow
                 )
-            );        }
+            );
+        }
     }
 
     const chooseWorkflow = (title: string) => {
@@ -84,14 +84,17 @@ const PageModule = () => {
         );
     }
 
-    const workflowModule = <WorkflowModule agent={agent}
-                                           workflow={workflows[workflowIndex]}
-                                           setTitleAction={setTitle}
-                                           setWorkflowAction={setWorkflowAction}/>;
+    const workflowModule = <WorkflowModule
+        setError={setError}
+        agent={agent}
+        workflow={workflows[workflowIndex]}
+        setTitleAction={setTitle}
+        setWorkflowAction={setWorkflowAction}/>;
     return (
         <div className={styles.main}>
             <BrowserRouter>
-                <Header workflows={workflows}
+                <Header setError={setError}
+                        workflows={workflows}
                         chooseWorkflowAction={chooseWorkflow}
                         createNewWorkflowAction={createNewWorkflowAction}
                         removeWorkflowAction={removeWorkflowAction}
@@ -100,9 +103,11 @@ const PageModule = () => {
                 <Routes>
                     <Route index path="/" element={workflowModule}/>
                     <Route path="/about" element={<AboutModule/>}/>
-                    <Route path="/settings" element={<SettingsModule/>}/>
+                    <Route path="/settings" element={<SettingsModule setError={setError}/>}/>
                     <Route path="*" element={workflowModule}/>
                 </Routes>
+
+                <ErrorModule setError={setError} errorMessage={error}/>
             </BrowserRouter>
         </div>
     );

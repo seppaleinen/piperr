@@ -3,14 +3,14 @@ import Button from '../button.module';
 import { Agent, Card } from '../domains';
 
 const CardModule = ({
-                    index,
-                    card,
-                    agent,
-                    addCardAction,
-                    removeCardAction,
-                    updateCardScriptAction,
-                    executeScriptAction,
-                }: {
+                        index,
+                        card,
+                        agent,
+                        addCardAction,
+                        removeCardAction,
+                        updateCardScriptAction,
+                        executeScriptAction,
+                    }: {
     index: number;
     card: Card;
     agent: Agent;
@@ -22,8 +22,8 @@ const CardModule = ({
     <div className={styles.card}>
         <div className={styles.outerScript}>
             <div className={styles.tags}>
-                <div>{agent.shell}</div>
-                <div>{agent.os}</div>
+                {agent.shell && <div>{agent.shell}</div>}
+                {agent.os && <div>{agent.os}</div>}
             </div>
             <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg"
                  className={card.loading ? styles.showLoading : styles.hide}>

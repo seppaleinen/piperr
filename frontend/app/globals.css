@@ -7,6 +7,7 @@
     --foreground: #F5F7F8;
     --primary: #CCC672;
     --secondary: #8292AD;
+    --error: #9C1A1C;
     --shaded-background: var(--secondary);
     --shaded-primary: color-mix(in hsl, var(--primary), black 20%)
 }

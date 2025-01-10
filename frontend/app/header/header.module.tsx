@@ -5,12 +5,20 @@ import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
 
-const HeaderModule = ({workflows, chooseWorkflowAction, createNewWorkflowAction, removeWorkflowAction}: {
-    workflows: Workflow[],
-    chooseWorkflowAction: (title: string) => void,
-    createNewWorkflowAction: () => void,
-    removeWorkflowAction: (title: string) => void
-}) => {
+const HeaderModule = (
+    {
+        workflows,
+        chooseWorkflowAction,
+        createNewWorkflowAction,
+        removeWorkflowAction,
+        setError
+    }: {
+        workflows: Workflow[],
+        chooseWorkflowAction: (title: string) => void,
+        createNewWorkflowAction: () => void,
+        removeWorkflowAction: (title: string) => void
+        setError: (error: string | null) => void
+    }) => {
     const navigate = useNavigate();
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -33,10 +41,7 @@ const HeaderModule = ({workflows, chooseWorkflowAction, createNewWorkflowAction,
 
     const useCloseNavigationOnClickOutside = (ref: any, onClickOutside: any) => {
         useEffect(() => {
-            /**
-             * Invoke Function onClick outside of element
-             */
-            function handleClickOutside(event: any) {
+            const handleClickOutside = (event: any) => {
                 if (ref.current && !ref.current.contains(event.target)) {
                     onClickOutside();
                 }
@@ -96,7 +101,7 @@ const HeaderModule = ({workflows, chooseWorkflowAction, createNewWorkflowAction,
                 PIPERR
             </div>
             <div>
-                <PersistWorkflows workflows={workflows}/>
+                <PersistWorkflows setError={setError} workflows={workflows}/>
             </div>
         </header>
     );

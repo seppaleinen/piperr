@@ -3,11 +3,13 @@ import styles from './persist.module.css';
 import { postData } from '../util';
 
 export default function PersistWorkflows(
-    {workflows}:
-    { workflows: Workflow[] }
+    {   workflows,
+        setError}:
+    {   workflows: Workflow[],
+        setError: (error: string | null) => void }
 ) {
     const persistWorkflows = async () => {
-        await postData('/persist/workflows', workflows);
+        await postData('/persist/workflows', workflows, setError);
     };
 
     return (

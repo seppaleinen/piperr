@@ -4,23 +4,29 @@ import Button from '../button.module';
 import { Agent, Card, Workflow } from '../domains';
 import { postData } from '../util';
 
-const WorkflowModule = ({agent, workflow, setTitleAction, setWorkflowAction}: {
-    agent: Agent,
-    workflow: Workflow,
-    setTitleAction: (titles: string) => void,
-    setWorkflowAction: (workflow: Workflow) => void
-}) => {
+const WorkflowModule = (
+    {
+        agent,
+        workflow,
+        setTitleAction,
+        setWorkflowAction,
+        setError
+    }: {
+        agent: Agent,
+        workflow: Workflow,
+        setTitleAction: (titles: string) => void,
+        setWorkflowAction: (workflow: Workflow) => void,
+        setError: (error: string | null) => void
+    }) => {
     const executeScript = async (index: number) => {
         updateCardOutput(index, '', true)
         const script = workflow.cards[index].script;
         const data = index > 0 ? workflow.cards[index - 1].output : null;
         for (const line of data ? data.trim().split('\n') : ['']) {
-            postData('/cmd', {cmd: script.replace('{}', line)})
-                .then((result: string | any) => {
-                    const output = typeof result !== 'string' ? `Error: ${result.error}` : result;
-                    console.log("OUTPUT: " + output)
+            postData('/cmd', {cmd: script.replace('{}', line)}, setError)
+                .then((result: string) => {
                     const outputs: string[] = []
-                    outputs.push(output);
+                    outputs.push(result);
                     updateCardOutput(index, outputs.join(''), false);
                 });
         }
@@ -28,7 +34,8 @@ const WorkflowModule = ({agent, workflow, setTitleAction, setWorkflowAction}: {
 
 
     const addCardAction = () => {
-        setWorkflowAction({...workflow,
+        setWorkflowAction({
+            ...workflow,
             cards: [...workflow.cards, new Card()]
         });
     };
@@ -36,23 +43,23 @@ const WorkflowModule = ({agent, workflow, setTitleAction, setWorkflowAction}: {
     const removeCardAction = (index: number) => {
         const updatedCards = workflow.cards.filter((_, i) => i !== index);
 
-        setWorkflowAction({ ...workflow, cards: updatedCards });
+        setWorkflowAction({...workflow, cards: updatedCards});
     };
 
     const updateCardScript = (index: number, script: string) => {
         const updatedCards = workflow.cards.map((card, i) =>
-            i === index ? { ...card, script } : card
+            i === index ? {...card, script} : card
         );
 
-        setWorkflowAction({ ...workflow, cards: updatedCards });
+        setWorkflowAction({...workflow, cards: updatedCards});
     };
 
     const updateCardOutput = (index: number, output: string, loading: boolean) => {
         const updatedCards = workflow.cards.map((card, i) =>
-            i === index ? { ...card, output, loading } : card
+            i === index ? {...card, output, loading} : card
         );
 
-        setWorkflowAction({ ...workflow, cards: updatedCards });
+        setWorkflowAction({...workflow, cards: updatedCards});
     };
 
     const updateTitle = (title: string) => {

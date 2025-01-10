@@ -4,12 +4,14 @@ import ButtonModule from '../button.module';
 import { Agent, Settings } from '../domains';
 import { getData, postData } from '../util';
 
-const SettingsModule = () => {
+const SettingsModule = (
+    {setError}:
+    { setError: (error: string | null) => void }) => {
     const [settings, setSettings] = React.useState(new Settings());
 
     useEffect(() => {
         async function fetchSettings() {
-            return await getData('/settings');
+            return await getData('/settings', setError);
         }
 
         fetchSettings()
@@ -21,7 +23,7 @@ const SettingsModule = () => {
     }, [])
 
     const persistSettings = async () => {
-        await postData('/persist/settings', settings);
+        await postData('/persist/settings', settings, setError);
     };
 
     const doStuff = (agent: Agent, field: keyof Agent, text: string, type: string = 'text') => {

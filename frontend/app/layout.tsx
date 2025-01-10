@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Page from './workflows/page.module';
+import Page from './page.module';
 
 const render = () => {
     if (process.env.NODE_ENV === 'development') {
