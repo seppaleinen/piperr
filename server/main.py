@@ -2,6 +2,7 @@ import json
 import socket
 import sqlite3
 import subprocess
+import requests
 
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
@@ -36,7 +37,13 @@ def get_db():
 @app.route("/cmd", methods=['POST'])
 def cmd():
     data = request.get_json()
-    return execute_command(data['cmd'], data['agent_id'])
+    command = data['cmd']
+    agent_id = data.get('agent_id', 0)
+    ip = get_other_ip_or_none(agent_id)
+    if ip is not None:
+        return requests.post("http://%s:8000/cmd" % ip, json=data).json()
+    else:
+        return execute_command(command, agent_id)
 
 @app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')
 def get_workflows(agent_id):
@@ -70,6 +77,22 @@ def get_workflows(agent_id):
     return jsonify(response)  # Convert to a Flask JSON response
 
 
+def get_other_ip_or_none(agent_id):
+    try:
+        with get_db() as conn:
+            conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
+            c = conn.cursor()
+            c.execute('''SELECT a.ip AS ip
+                            FROM agents a
+                            WHERE a.id = ?;''', (agent_id,))
+            agent_ip = c.fetchone()['ip']
+            this_ip = get_ip()
+            return agent_ip if agent_ip != this_ip else None
+    except Exception as e:
+        print("Error executing command: %s. %s" % (cmd, e))
+        return None
+
+
 def execute_command(command, agent_id=0):
     try:
         command = command
@@ -89,6 +112,9 @@ def execute_command(command, agent_id=0):
     except subprocess.CalledProcessError as e:
         print("Error executing command: %s. %s" % (cmd, e))
         return e.output
+    except Exception as e:
+        print("Error executing command: %s. %s" % (cmd, e))
+        return e
 
 
 @app.route("/settings", methods=['GET'], endpoint='get_settings')
