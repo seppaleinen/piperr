@@ -23,7 +23,7 @@ const WorkflowModule = (
         const script = workflow.cards[index].script;
         const data = index > 0 ? workflow.cards[index - 1].output : null;
         for (const line of data ? data.trim().split('\n') : ['']) {
-            postData('/cmd', {cmd: script.replace('{}', line)}, setError)
+            postData('/cmd', {cmd: script.replace('{}', line), agent_id: agent.id}, setError)
                 .then((result: string) => {
                     const outputs: string[] = []
                     outputs.push(result);

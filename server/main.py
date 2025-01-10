@@ -36,10 +36,7 @@ def get_db():
 @app.route("/cmd", methods=['POST'])
 def cmd():
     data = request.get_json()
-    try:
-        return subprocess.check_output([data['cmd']], shell=True)
-    except subprocess.CalledProcessError as e:
-        return e.output
+    return execute_command(data['cmd'], data['agent_id'])
 
 @app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')
 def get_workflows(agent_id):
@@ -73,12 +70,25 @@ def get_workflows(agent_id):
     return jsonify(response)  # Convert to a Flask JSON response
 
 
-def execute_command(command):
+def execute_command(command, agent_id=0):
     try:
-        return subprocess.check_output([command])
+        command = command
+        if "sudo" in command:
+            with get_db() as conn:
+                conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
+                c = conn.cursor()
+                c.execute('''SELECT a.sudo_password AS sudo
+                                FROM agents a
+                                WHERE a.id = ?;''', (agent_id,))
+                sudo = c.fetchone()['sudo']
+                if not sudo:
+                    return "No sudo password found for agent %s" % agent_id
+                command = command.replace("sudo", "echo %s | sudo -S" % sudo)
+
+        return subprocess.check_output([command], shell=True)
     except subprocess.CalledProcessError as e:
         print("Error executing command: %s. %s" % (cmd, e))
-        return None
+        return e.output
 
 
 @app.route("/settings", methods=['GET'], endpoint='get_settings')
