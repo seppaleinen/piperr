@@ -25,6 +25,7 @@ services:
     privileged: true
     volumes:
       - /:/host
+      - piperr-data:/install/
     ports:
       - "8000:8000"
     develop:
@@ -48,3 +49,7 @@ services:
       watch:
         - action: rebuild
           path: server
+
+volumes:
+  piperr-data:
+    name: piperr-data
