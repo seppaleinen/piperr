@@ -1,12 +1,12 @@
 services:
   frontend:
-    image: piperr-frontend
+    image: seppaleinen/piperr-frontend
     container_name: piperr-frontend
     build:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "3004:80"
     develop:
       watch:
         - action: sync
@@ -19,11 +19,25 @@ services:
     build:
       context: server
       dockerfile: Dockerfile
-    image: piperr-server
+    image: seppaleinen/piperr-server
     container_name: piperr-server
     stop_signal: SIGINT
     ports:
       - "8000:8000"
+    develop:
+      watch:
+        - action: rebuild
+          path: server
+
+  agent:
+    build:
+      context: server
+      dockerfile: agent.Dockerfile
+    image: seppaleinen/piperr-agent
+    container_name: piperr-agent
+    stop_signal: SIGINT
+    ports:
+      - "8000:8002"
     develop:
       watch:
         - action: rebuild
