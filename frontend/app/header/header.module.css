@@ -104,6 +104,10 @@
     box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 15px inset;
 }
 
+.newWorkFlow {
+    margin-left: 8px;
+}
+
 @media (max-width: 767px) {
     .navigation ul {
         li:hover {

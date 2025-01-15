@@ -1,12 +1,13 @@
 import json
 import socket
 import sqlite3
-import subprocess
-import requests
 
+import requests
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
 from flask_cors import CORS
+
+from server.common import execute_command
 
 app = Flask(__name__)
 asgi_app = WsgiToAsgi(app)
@@ -40,10 +41,19 @@ def cmd():
     command = data['cmd']
     agent_id = data.get('agent_id', 0)
     ip = get_other_ip_or_none(agent_id)
+    with get_db() as conn:
+        conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
+        c = conn.cursor()
+        c.execute('''SELECT a.sudo_password AS sudo
+                                FROM agents a
+                                WHERE a.id = ?;''', (agent_id,))
+        sudo = c.fetchone()['sudo']
+
+    data['sudo'] = sudo
     if ip is not None:
         return requests.post("http://%s:8000/cmd" % ip, json=data).json()
     else:
-        return execute_command(command, agent_id)
+        return execute_command(command, sudo)
 
 @app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')
 def get_workflows(agent_id):
@@ -91,30 +101,6 @@ def get_other_ip_or_none(agent_id):
     except Exception as e:
         print("Error executing command: %s. %s" % (cmd, e))
         return None
-
-
-def execute_command(command, agent_id=0):
-    try:
-        command = command
-        if "sudo" in command:
-            with get_db() as conn:
-                conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
-                c = conn.cursor()
-                c.execute('''SELECT a.sudo_password AS sudo
-                                FROM agents a
-                                WHERE a.id = ?;''', (agent_id,))
-                sudo = c.fetchone()['sudo']
-                if not sudo:
-                    return "No sudo password found for agent %s" % agent_id
-                command = command.replace("sudo", "echo %s | sudo -S" % sudo)
-
-        return subprocess.check_output([command], shell=True)
-    except subprocess.CalledProcessError as e:
-        print("Error executing command: %s. %s" % (cmd, e))
-        return e.output
-    except Exception as e:
-        print("Error executing command: %s. %s" % (cmd, e))
-        return e
 
 
 @app.route("/settings", methods=['GET'], endpoint='get_settings')

@@ -1,18 +1,20 @@
 import Hamburger from './hamburger.module';
 import { useEffect, useRef, useState } from 'react';
-import { Workflow } from '../domains';
+import { Agent, Workflow } from '../domains';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
 
 const HeaderModule = (
     {
+        agents,
         workflows,
         chooseWorkflowAction,
         createNewWorkflowAction,
         removeWorkflowAction,
         setError
     }: {
+        agents: Agent[],
         workflows: Workflow[],
         chooseWorkflowAction: (title: string) => void,
         createNewWorkflowAction: () => void,
@@ -27,7 +29,7 @@ const HeaderModule = (
         setHamburgerOpen(!hamburgerOpen);
     }
 
-    const createNewWorkflowAndClose = () => {
+    const createNewWorkflowAndClose = (agent_id: number) => {
         createNewWorkflowAction();
         setHamburgerOpen(false);
         navigate('/');
@@ -76,22 +78,35 @@ const HeaderModule = (
                         <Link to={'/about'} onClick={() => setHamburgerOpen(!hamburgerOpen)}>About</Link>
                     </li>
                     <hr/>
-                    <li onClick={() => createNewWorkflowAndClose()}>
-                        <div>Create new workflow</div>
-                    </li>
-                    {workflows
-                        .map((workflow, index) =>
-                            (
-                                <li key={index}>
-                                    <div className={`${styles.inline} ${styles.name}`}
-                                         onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</div>
-                                    <div className={`${styles.inline} ${styles.close}`}
-                                         onClick={() => removeWorkflowAction(workflow.title)}>X
-                                    </div>
+                    {agents.map((agent) => {
+                        return (
+                            <div>
+                                <li key={`agent-${agent.id}`} className={styles.agentName}>
+                                    {agent.nickname}
                                 </li>
-                            )
+                                <li className={styles.newWorkFlow} onClick={() => createNewWorkflowAndClose(agent.id)}>
+                                    <div>Create new workflow</div>
+                                </li>
+                                {
+                                    workflows
+                                        .filter(workflow => workflow.agent.id === agent.id)
+                                        .map((workflow, index) =>
+                                            (
+                                                <li key={index}>
+                                                    <div className={`${styles.inline} ${styles.name}`}
+                                                         onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</div>
+                                                    <div className={`${styles.inline} ${styles.close}`}
+                                                         onClick={() => removeWorkflowAction(workflow.title)}>X
+                                                    </div>
+                                                </li>
+                                            )
+                                        )
+                                }
+                                <hr/>
+                            </div>
                         )
-                    }
+                    })}
+
                 </ul>
                 <div className={styles.hamburger} onClick={toggleHamburger}>
                     <Hamburger isOpen={hamburgerOpen}/>

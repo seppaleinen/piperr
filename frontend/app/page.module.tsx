@@ -13,12 +13,13 @@ import { getData } from './util';
 const PageModule = () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);
     const [workflowIndex, setWorkflowIndex] = useState(0);
-    const [agent, setAgent] = useState(new Agent());
+    const [agentId, setAgentId] = useState(0);
+    const [agents, setAgents] = useState<Agent[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchWorkflows = async () => {
-            getData(`/workflows/${agent.id}`, setError)
+            getData(`/workflows/${agentId}`, setError)
                 .then((result: Workflow[]) => {
                     if (result.length === 0) {
                         result = [new Workflow()];
@@ -31,14 +32,15 @@ const PageModule = () => {
             getData('/settings', setError)
                 .then((result: Settings) => {
                     if (Object.keys(result).length > 0 && result.agents.length > 0) {
-                        setAgent(result.agents.filter(agent => agent.id === 0)[0]);
+                        setAgents(result.agents);
+                        setAgentId(0);
                     }
                 });
         };
 
         Promise.all([fetchWorkflows(), fetchSettings()]).then(() => {
         });
-    }, [agent.id])
+    }, [])
 
     const setTitle = (title: string) => {
         if (title.trim().length > 0 && workflows.filter(workflow => workflow.title === title).length === 0) {
@@ -60,7 +62,7 @@ const PageModule = () => {
             const index = workflows.push(new Workflow());
             setWorkflowIndex(index - 1);
         } else {
-            alert("Please enter a title for the current workflow before creating a new one.");
+            setError("Please enter a title for the current workflow before creating a new one.");
         }
     }
 
@@ -84,16 +86,21 @@ const PageModule = () => {
         );
     }
 
+    const getCurrentAgent = () => {
+        return agents.find(agent => agent.id === agentId) || new Agent();
+    }
+
     const workflowModule = <WorkflowModule
         setError={setError}
-        agent={agent}
+        agent={getCurrentAgent()}
         workflow={workflows[workflowIndex]}
         setTitleAction={setTitle}
         setWorkflowAction={setWorkflowAction}/>;
     return (
         <div className={styles.main}>
             <BrowserRouter>
-                <Header setError={setError}
+                <Header agents={agents}
+                        setError={setError}
                         workflows={workflows}
                         chooseWorkflowAction={chooseWorkflow}
                         createNewWorkflowAction={createNewWorkflowAction}
