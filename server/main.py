@@ -53,7 +53,7 @@ def cmd():
         sudo = result['sudo'] if result else None
 
     data['sudo'] = sudo
-    if ip is not None:
+    if ip is not None and ip is not '':
         print("Delegating to agent")
         return requests.post("http://%s:8000/cmd" % ip, json=data).json()
     else:
