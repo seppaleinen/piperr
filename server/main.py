@@ -49,7 +49,8 @@ def cmd():
         c.execute('''SELECT a.sudo_password AS sudo
                                 FROM agents a
                                 WHERE a.id = ?;''', (agent_id,))
-        sudo = c.fetchone()['sudo']
+        result = c.fetchone()
+        sudo = result['sudo'] if result else None
 
     data['sudo'] = sudo
     if ip is not None:
