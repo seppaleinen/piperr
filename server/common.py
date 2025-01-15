@@ -3,6 +3,7 @@ import subprocess
 
 def execute_command(command, sudo=None):
     try:
+        command = "chroot /host /bin/bash -c \"%s\"" % command
         print("Executing command")
         if "sudo" in command:
             command = command.replace("sudo", "echo %s | sudo -S" % sudo)
