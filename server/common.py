@@ -3,6 +3,7 @@ import subprocess
 
 def execute_command(command, sudo=None):
     try:
+        print("Executing command")
         if "sudo" in command:
             command = command.replace("sudo", "echo %s | sudo -S" % sudo)
 

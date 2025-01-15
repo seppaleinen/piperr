@@ -40,7 +40,9 @@ def cmd():
     data = request.get_json()
     command = data['cmd']
     agent_id = data.get('agent_id', 0)
+    print("Agent ID: %s" % agent_id)
     ip = get_other_ip_or_none(agent_id)
+    print("IP: %s" % ip)
     with get_db() as conn:
         conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
         c = conn.cursor()
@@ -51,8 +53,10 @@ def cmd():
 
     data['sudo'] = sudo
     if ip is not None:
+        print("Delegating to agent")
         return requests.post("http://%s:8000/cmd" % ip, json=data).json()
     else:
+        print("Executing locally")
         return execute_command(command, sudo)
 
 @app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')

@@ -23,6 +23,7 @@ const WorkflowModule = (
         const script = workflow.cards[index].script;
         const data = index > 0 ? workflow.cards[index - 1].output : null;
         for (const line of data ? data.trim().split('\n') : ['']) {
+            console.log(`Executing script on agent: ${agent.id} ${agent.nickname}`);
             postData('/cmd', {cmd: script.replace('{}', line), agent_id: agent.id}, setError)
                 .then((result: string) => {
                     const outputs: string[] = []
