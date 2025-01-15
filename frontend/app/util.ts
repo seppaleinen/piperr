@@ -1,5 +1,9 @@
+const backend_url = process.env.NODE_ENV === 'development' ?
+    'http://localhost:8000' :
+    '/backend';
+
 export const postData = async (path: string, data: any, setError: (error: string | null) => void) => {
-    const response = await fetch(`http://localhost:8000${path}`, {
+    const response = await fetch(`${backend_url}${path}`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
@@ -16,7 +20,7 @@ export const postData = async (path: string, data: any, setError: (error: string
 };
 
 export const getData = async (path: string, setError: (error: string | null) => void) => {
-    return await fetch(`http://localhost:8000${path}`)
+    return await fetch(`${backend_url}${path}`)
         .catch((error: Error) => {
             setError(error.message);
         })
