@@ -70,7 +70,7 @@ const SettingsModule = (
                                 <div>SHELL: {agent.shell}</div>
                                 <div>username: {agent.username}</div>
                                 <div>main: {agent.main ? 'Yes' : 'No'}</div>
-                                {doStuff(agent, 'sudo_password', 'Sudo password: ', 'text')}
+                                {doStuff(agent, 'sudo_password', 'Sudo password: ', 'password')}
                             </div>
                         )
                     })}
