@@ -7,7 +7,7 @@ from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
 from flask_cors import CORS
 
-from server.common import execute_command
+from common import execute_command
 
 app = Flask(__name__)
 asgi_app = WsgiToAsgi(app)
