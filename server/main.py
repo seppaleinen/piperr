@@ -1,5 +1,4 @@
 import json
-import socket
 import sqlite3
 
 import requests
@@ -7,25 +6,12 @@ from asgiref.wsgi import WsgiToAsgi
 from flask import Flask, request, jsonify, g, current_app
 from flask_cors import CORS
 
-from common import execute_command
+from common import execute_command, get_ip, Agent
 
 app = Flask(__name__)
 asgi_app = WsgiToAsgi(app)
 cors = CORS(app, resources={r"/*/*": {"origins": "*"}}) # allow CORS for all domains on all routes.
 app.config['CORS_HEADERS'] = 'Content-Type'
-
-def get_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.settimeout(0)
-    try:
-        # doesn't even have to be reachable
-        s.connect(('10.254.254.254', 1))
-        ip = s.getsockname()[0]
-    except Exception:
-        ip = '127.0.0.1'
-    finally:
-        s.close()
-    return ip
 
 def get_db():
     if 'db' not in g:
@@ -133,22 +119,18 @@ def get_settings():
             GROUP BY s.id;
         ''')
 
-        workflows = c.fetchall()
+        setting_agents = c.fetchall()
 
     response = {}
-    for row in workflows:
+    for row in setting_agents:
         response['id'] = row["id"]
         for a in json.loads(row["agents"]):
-            agent = {'ip': a.get('ip') if a.get('ip') else get_ip(),
-                     'sudo_password': a.get('sudo_password'),
-                     'id': a.get('id'),
-                     'main': a.get('main', False),
-                     'nickname': a.get('nickname', ''),
-                     'os': a.get('os') if a.get('os') else execute_command("uname -o").strip().decode("utf-8"),
-                     'shell': a.get('shell') if a.get('shell') else execute_command("echo $SHELL").strip().decode("utf-8"),
-                     'username': a.get('username') if a.get('username') else execute_command("whoami").strip().decode("utf-8"),
-                     }
+            agent = Agent.create_from_row(a).to_dict()
             response['agents'] = response.get('agents', []) + [agent]
+    if response == {}:
+        response = {'id': 0,
+                    'agents': [Agent.create(0, True, None, None, None, None, None).to_dict()]
+                    }
 
     return jsonify(response)  # Convert to a Flask JSON response
 

@@ -7,6 +7,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './app'), // Matches your `@/*` alias
+            '@commons': path.resolve(__dirname, './app/commons'), // Matches your `@/*` alias
         },
     },
     build: {

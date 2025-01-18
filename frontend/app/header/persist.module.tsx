@@ -1,6 +1,6 @@
-import { Workflow } from '../domains';
 import styles from './persist.module.css';
-import { postData } from '../util';
+import { Workflow } from '@commons/domains';
+import { postData } from '@commons/util';
 
 export default function PersistWorkflows(
     {   workflows,

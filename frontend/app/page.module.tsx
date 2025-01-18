@@ -2,13 +2,13 @@ import styles from './page.module.css';
 import { useEffect, useState } from 'react';
 import WorkflowModule from './workflows/workflow.module';
 import Header from './header/header.module';
-import { Agent, Settings, Workflow } from './domains';
 import './globals.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import AboutModule from './about/about.module';
-import ErrorModule from './error.module';
-import SettingsModule from './settings/settings.module';
-import { getData } from './util';
+import AboutModule from '@/about/about.module';
+import SettingsModule from '@/settings/settings.module';
+import ErrorModule from '@commons/error.module';
+import { getData } from '@commons/util';
+import { Agent, Settings, Workflow } from '@commons/domains';
 
 const PageModule = () => {
     const [workflows, setWorkflows] = useState<Workflow[]>([new Workflow()]);

@@ -1,6 +1,6 @@
 import styles from './card.module.css';
-import Button from '../button.module';
-import { Agent, Card } from '../domains';
+import Button from '@commons/button.module';
+import { Agent, Card } from '@commons/domains';
 
 const CardModule = ({
                         index,

@@ -22,10 +22,10 @@
         "name": "next"
       }
     ],
+    "baseUrl": "./app",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@commons/*": ["commons/*"]
     }
   },
   "include": [

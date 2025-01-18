@@ -1,8 +1,8 @@
 import styles from './workflow.module.css';
 import CardModule from './card.module';
-import Button from '../button.module';
-import { Agent, Card, Workflow } from '../domains';
-import { postData } from '../util';
+import Button from '@commons/button.module';
+import { Agent, Card, Workflow } from '@commons/domains';
+import { postData } from '@commons/util';
 
 const WorkflowModule = (
     {

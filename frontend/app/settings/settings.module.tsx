@@ -1,21 +1,26 @@
 import React, { useEffect } from 'react';
 import styles from './settings.module.css';
-import ButtonModule from '../button.module';
-import { Agent, Settings } from '../domains';
-import { getData, postData } from '../util';
+import ButtonModule from '@commons/button.module';
+import { Agent, Settings } from '@commons/domains';
+import { getData, postData } from '@commons/util';
+import { SpinnerModule } from '@commons/spinner.module';
 
 const SettingsModule = (
     {setError}:
     { setError: (error: string | null) => void }) => {
     const [settings, setSettings] = React.useState(new Settings());
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         async function fetchSettings() {
-            return await getData('/settings', setError);
+            setLoading(true);
+            const data = await getData('/settings', setError);
+            setLoading(false);
+            return data;
         }
 
         fetchSettings()
-            .then(result => {
+            .then((result: Settings) => {
                 if (Object.keys(result).length > 0 && result.agents.length > 0) {
                     setSettings(result);
                 }
@@ -86,6 +91,7 @@ const SettingsModule = (
             <ButtonModule action={persistSettings}
                           text={"Save"}
                           style={styles.submit}/>
+            {loading && <SpinnerModule loading={loading}/>}
         </section>
     )
 }

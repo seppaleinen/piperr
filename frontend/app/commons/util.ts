@@ -20,11 +20,15 @@ export const postData = async (path: string, data: any, setError: (error: string
 };
 
 export const getData = async (path: string, setError: (error: string | null) => void) => {
-    return await fetch(`${backend_url}${path}`)
-        .catch((error: Error) => {
-            setError(error.message);
-        })
-        .then((response: Response | void) => {
-            return response ? response.json() : [];
-        });
+    try {
+        const response = await fetch(`${backend_url}${path}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} message: ${await response.text()}`);
+        }
+        return await response.json();
+    } catch (error: any) {
+        console.log("Error fetching data:", error);
+        setError(error.message);
+        return [];
+    }
 };

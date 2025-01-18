@@ -1,6 +1,6 @@
 import Hamburger from './hamburger.module';
 import { useEffect, useRef, useState } from 'react';
-import { Agent, Workflow } from '../domains';
+import { Agent, Workflow } from '@commons/domains';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
@@ -80,11 +80,11 @@ const HeaderModule = (
                     <hr/>
                     {agents.map((agent) => {
                         return (
-                            <div>
+                            <div key={`div-${agent.id}`}>
                                 <li key={`agent-${agent.id}`} className={styles.agentName}>
                                     {agent.nickname}
                                 </li>
-                                <li className={styles.newWorkFlow} onClick={() => createNewWorkflowAndClose(agent.id)}>
+                                <li key={`agent-${agent.id}-new`} className={styles.newWorkFlow} onClick={() => createNewWorkflowAndClose(agent.id)}>
                                     <div>Create new workflow</div>
                                 </li>
                                 {
@@ -92,7 +92,7 @@ const HeaderModule = (
                                         .filter(workflow => workflow.agent.id === agent.id)
                                         .map((workflow, index) =>
                                             (
-                                                <li key={index}>
+                                                <li key={`${agent.id}-${index}`}>
                                                     <div className={`${styles.inline} ${styles.name}`}
                                                          onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</div>
                                                     <div className={`${styles.inline} ${styles.close}`}
