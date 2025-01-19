@@ -10,19 +10,28 @@
         margin-bottom: 24px;
     }
 
+    .inputWrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
+
     .input {
         border: solid 1px var(--foreground);
         border-radius: 4px;
         padding: 0 4px;
-        margin-bottom: 4px;
+        margin-bottom: 0;
         width: 130px;
         background-color: color-mix(in hsl, var(--background), white 40%);
+    }
+
+    .checkbox {
+        width: 24px;
     }
 
     .agents {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
 
         .agent {
             border: solid 1px var(--foreground);

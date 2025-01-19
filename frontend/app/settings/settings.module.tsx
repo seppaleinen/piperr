@@ -22,19 +22,31 @@ const SettingsModule = (
         await postData('/persist/data', new Settings(agents), setError);
     };
 
-    const doStuff = (agent: Agent, field: keyof Agent, text: string, type: string = 'text') => {
+    const doInput = (agent: Agent, field: keyof Agent, text: string, type: string = 'text') => {
         return (
-            <div>
+            <div className={styles.inputWrapper}>
                 <span>{text}</span>
                 <input type={type}
                        value={String(agent[field])}
                        className={styles.input}
                        onChange={(e) => {
-                           console.log("Before Agent: ", agent);
                            const updatedAgent = {...agent, [field]: e.target.value};
-                           console.log("After Agent: ", agent);
                            setAgents(agents.map(a => a.id === agent.id ? updatedAgent : a));
-                           console.log("After After Agent: ", agent);
+                       }}/>
+            </div>
+        )
+    }
+
+    const doCheckbox = (agent: Agent, field: keyof Agent) => {
+        return (
+            <div className={styles.inputWrapper}>
+                <span>main: </span>
+                <input type="checkbox"
+                       checked={agent.main}
+                       className={`${styles.input} ${styles.checkbox}`}
+                       onChange={(e) => {
+                           const updatedAgent = {...agent, [field]: e.target.checked};
+                           setAgents(agents.map(a => a.id === agent.id ? updatedAgent : a));
                        }}/>
             </div>
         )
@@ -56,13 +68,13 @@ const SettingsModule = (
                                      }}>X
                                 </div>
                                 <br/>
-                                {doStuff(agent, 'nickname', 'Server nickname: ')}
-                                {doStuff(agent, 'ip', 'Agent IP: ')}
-                                <div>OS: {agent.os}</div>
-                                <div>SHELL: {agent.shell}</div>
-                                <div>username: {agent.username}</div>
-                                <div>main: {agent.main ? 'Yes' : 'No'}</div>
-                                {doStuff(agent, 'sudo_password', 'Sudo password: ', 'password')}
+                                {doInput(agent, 'nickname', 'Server nickname: ')}
+                                {doInput(agent, 'ip', 'Agent IP: ')}
+                                {doInput(agent, 'os', 'OS: ')}
+                                {doInput(agent, 'shell', 'shell: ')}
+                                {doInput(agent, 'username', 'username: ')}
+                                {doCheckbox(agent, 'main')}
+                                {doInput(agent, 'sudo_password', 'Sudo password: ', 'password')}
                             </div>
                         )
                     })}

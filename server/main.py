@@ -107,12 +107,17 @@ def get_other_ip_or_none(agent_id):
         with get_db() as conn:
             conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
             c = conn.cursor()
-            c.execute('''SELECT a.ip AS ip
+            c.execute('''SELECT a.ip AS ip, a.main as main
                             FROM agents a
                             WHERE a.id = ?;''', (agent_id,))
-            agent_ip = c.fetchone()['ip']
-            this_ip = get_ip()
-            return agent_ip if agent_ip != this_ip else None
+            result  = c.fetchone()
+            agent_ip = result['ip']
+            is_main = result['main']
+            if is_main:
+                return None
+            else:
+                this_ip = get_ip()
+                return agent_ip if agent_ip != this_ip else None
     except Exception as e:
         print("Error executing command: %s. %s" % (cmd, e))
         return None
