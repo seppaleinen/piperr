@@ -28,10 +28,6 @@ services:
       - piperr-data:/install/db
     ports:
       - "8000:8000"
-    develop:
-      watch:
-        - action: rebuild
-          path: server
 
   agent:
     build:
@@ -44,11 +40,7 @@ services:
     volumes:
       - /:/host
     ports:
-      - "8000:8002"
-    develop:
-      watch:
-        - action: rebuild
-          path: server
+      - "8000:8000"
 
 volumes:
   piperr-data:

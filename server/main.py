@@ -39,7 +39,10 @@ def cmd():
     data['sudo'] = sudo
     if ip is not None and ip != '':
         print("Delegating to agent")
-        return requests.post("http://%s:8000/cmd" % ip, json=data).json()
+        try:
+            return requests.post("http://%s:8000/cmd" % ip, json=data).text
+        except Exception as e:
+            return "Error executing command due to error: %s" % e
     else:
         print("Executing locally")
         return execute_command(command, sudo)
