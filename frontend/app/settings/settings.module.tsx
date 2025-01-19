@@ -30,8 +30,11 @@ const SettingsModule = (
                        value={String(agent[field])}
                        className={styles.input}
                        onChange={(e) => {
+                           console.log("Before Agent: ", agent);
                            const updatedAgent = {...agent, [field]: e.target.value};
+                           console.log("After Agent: ", agent);
                            setAgents(agents.map(a => a.id === agent.id ? updatedAgent : a));
+                           console.log("After After Agent: ", agent);
                        }}/>
             </div>
         )
@@ -65,7 +68,11 @@ const SettingsModule = (
                     })}
             </div>
             <ButtonModule action={() => {
-                setAgents(agents.concat(new Agent(agents.length)));
+                const newAgentId = agents.length;
+                console.log("Previous IDS: ", agents.map(a => a.id));
+                console.log("Adding new agent with id: ", newAgentId);
+                setAgents(agents.concat([new Agent(newAgentId)]));
+                console.log("After adding new agent: ", agents.map(a => a.id));
             }}
                           text={"Add Agent"}
                           style={styles.add}/>

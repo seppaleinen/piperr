@@ -31,7 +31,7 @@ const WorkflowModule = (
         }
     };
 
-    const updateTitle2 = (title: string) => {
+    const updateTitle = (title: string) => {
         setWorkflowAction({...workflow, title: title});
     }
 
@@ -74,7 +74,7 @@ const WorkflowModule = (
         <div className={styles.main}>
             <input value={workflow.title}
                    placeholder={"Name your workflow"}
-                   onChange={(e) => updateTitle2(e.target.value)}
+                   onChange={(e) => updateTitle(e.target.value)}
                    className={styles.title}/>
             {workflow.cards.map((card: Card, index: number) => (
                 <CardModule
