@@ -56,7 +56,7 @@ def get_data():
             json_group_array(
                 json_object(
                     'id', a.id,
-                    'sudoPassword', a.sudo_password,
+                    'sudo_password', a.sudo_password,
                     'main', a.main,
                     'nickname', a.nickname,
                     'ip', a.ip,
@@ -136,7 +136,7 @@ def persist_data():
                           agent.get('id'),
                           agent.get('ip', None),
                           1,
-                          agent.get('sudoPassword'),
+                          agent.get('sudo_password'),
                           agent.get('main', agent['id'] == 0),
                           agent.get('nickname', None),
                           agent.get('os', None),

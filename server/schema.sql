@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS agents
 (
     id            INTEGER PRIMARY KEY,
     settings_id   INTEGER NOT NULL REFERENCES settings (id),
-    sudo_password TEXT NOT NULL,
     main          BOOLEAN NOT NULL DEFAULT 0,
+    sudo_password TEXT, -- Optional sudo password of agent
     nickname      TEXT, -- Optional nickname of agent
     ip            TEXT, -- Optional IP of agent
     os            TEXT, -- Optional OS of agent
