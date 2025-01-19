@@ -1,6 +1,6 @@
 import Hamburger from './hamburger.module';
 import { useEffect, useRef, useState } from 'react';
-import { Agent, Workflow } from '@commons/domains';
+import { Agent } from '@commons/domains';
 import styles from './header.module.css';
 import PersistWorkflows from './persist.module';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,17 +8,15 @@ import { Link, useNavigate } from 'react-router-dom';
 const HeaderModule = (
     {
         agents,
-        workflows,
         chooseWorkflowAction,
         createNewWorkflowAction,
         removeWorkflowAction,
         setError
     }: {
         agents: Agent[],
-        workflows: Workflow[],
-        chooseWorkflowAction: (title: string) => void,
-        createNewWorkflowAction: () => void,
-        removeWorkflowAction: (title: string) => void
+        chooseWorkflowAction: (agentId: number, title: string) => void,
+        createNewWorkflowAction: (agentId: number) => void,
+        removeWorkflowAction: (agentId: number, title: string) => void
         setError: (error: string | null) => void
     }) => {
     const navigate = useNavigate();
@@ -29,14 +27,14 @@ const HeaderModule = (
         setHamburgerOpen(!hamburgerOpen);
     }
 
-    const createNewWorkflowAndClose = (agent_id: number) => {
-        createNewWorkflowAction();
+    const createNewWorkflowAndClose = (agentId: number) => {
+        createNewWorkflowAction(agentId);
         setHamburgerOpen(false);
         navigate('/');
     }
 
-    const chooseWorkflowAndClose = (title: string) => {
-        chooseWorkflowAction(title);
+    const chooseWorkflowAndClose = (agentId: number, title: string) => {
+        chooseWorkflowAction(agentId, title);
         setHamburgerOpen(false);
         navigate('/');
     }
@@ -88,15 +86,14 @@ const HeaderModule = (
                                     <div>Create new workflow</div>
                                 </li>
                                 {
-                                    workflows
-                                        .filter(workflow => workflow.agent.id === agent.id)
+                                    agent.workflows
                                         .map((workflow, index) =>
                                             (
                                                 <li key={`${agent.id}-${index}`}>
                                                     <div className={`${styles.inline} ${styles.name}`}
-                                                         onClick={() => chooseWorkflowAndClose(workflow.title)}>{workflow.title}</div>
+                                                         onClick={() => chooseWorkflowAndClose(agent.id, workflow.title)}>{workflow.title}</div>
                                                     <div className={`${styles.inline} ${styles.close}`}
-                                                         onClick={() => removeWorkflowAction(workflow.title)}>X
+                                                         onClick={() => removeWorkflowAction(agent.id, workflow.title)}>X
                                                     </div>
                                                 </li>
                                             )
@@ -116,7 +113,7 @@ const HeaderModule = (
                 PIPERR
             </div>
             <div>
-                <PersistWorkflows setError={setError} workflows={workflows}/>
+                <PersistWorkflows setError={setError} agents={agents}/>
             </div>
         </header>
     );

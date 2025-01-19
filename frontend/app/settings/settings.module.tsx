@@ -1,34 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './settings.module.css';
 import ButtonModule from '@commons/button.module';
 import { Agent, Settings } from '@commons/domains';
-import { getData, postData } from '@commons/util';
+import { postData } from '@commons/util';
 import { SpinnerModule } from '@commons/spinner.module';
 
 const SettingsModule = (
-    {setError}:
-    { setError: (error: string | null) => void }) => {
-    const [settings, setSettings] = React.useState(new Settings());
+    {
+        agents,
+        setAgents,
+        setError
+    }:
+    {
+        agents: Agent[],
+        setAgents: (agents: Agent[]) => void,
+        setError: (error: string | null) => void
+    }) => {
     const [loading, setLoading] = React.useState(false);
 
-    useEffect(() => {
-        async function fetchSettings() {
-            setLoading(true);
-            const data = await getData('/settings', setError);
-            setLoading(false);
-            return data;
-        }
-
-        fetchSettings()
-            .then((result: Settings) => {
-                if (Object.keys(result).length > 0 && result.agents.length > 0) {
-                    setSettings(result);
-                }
-            });
-    }, [])
-
-    const persistSettings = async () => {
-        await postData('/persist/settings', settings, setError);
+    const persistData = async () => {
+        await postData('/persist/data', new Settings(agents), setError);
     };
 
     const doStuff = (agent: Agent, field: keyof Agent, text: string, type: string = 'text') => {
@@ -40,10 +31,7 @@ const SettingsModule = (
                        className={styles.input}
                        onChange={(e) => {
                            const updatedAgent = {...agent, [field]: e.target.value};
-                           setSettings({
-                               ...settings,
-                               agents: settings.agents.map(a => a.id === agent.id ? updatedAgent : a)
-                           });
+                           setAgents(agents.map(a => a.id === agent.id ? updatedAgent : a));
                        }}/>
             </div>
         )
@@ -54,18 +42,14 @@ const SettingsModule = (
             <h1>Settings</h1>
             <hr/>
             <div className={styles.agents}>
-                {settings.agents
+                {agents
                     .sort((a, b) => a.id - b.id)
                     .map(agent => {
                         return (
                             <div className={styles.agent} key={agent.id}>
                                 <div className={styles.remove}
                                      onClick={() => {
-                                         setSettings({
-                                                 ...settings,
-                                                 agents: settings.agents.filter(a => a.id !== agent.id)
-                                             }
-                                         )
+                                         setAgents(agents.filter(a => a.id !== agent.id))
                                      }}>X
                                 </div>
                                 <br/>
@@ -81,14 +65,11 @@ const SettingsModule = (
                     })}
             </div>
             <ButtonModule action={() => {
-                setSettings({
-                    ...settings,
-                    agents: settings.agents.concat(new Agent(settings.agents.length))
-                });
+                setAgents(agents.concat(new Agent(agents.length)));
             }}
                           text={"Add Agent"}
                           style={styles.add}/>
-            <ButtonModule action={persistSettings}
+            <ButtonModule action={persistData}
                           text={"Save"}
                           style={styles.submit}/>
             {loading && <SpinnerModule loading={loading}/>}

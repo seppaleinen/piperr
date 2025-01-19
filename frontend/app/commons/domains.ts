@@ -11,13 +11,13 @@ export class Card {
 }
 
 export class Workflow {
-    constructor(title: string = 'Unnamed workflow', cards: Card[] = [new Card()], agent: Agent = new Agent()) {
-        this.agent = agent;
+    constructor(title: string = 'Unnamed workflow', cards: Card[] = [new Card()], agentId: number = 0) {
+        this.agentId = agentId;
         this.title = title;
         this.cards = cards;
     }
 
-    agent: Agent;
+    agentId: number;
     title: string;
     cards: Card[];
 }
@@ -30,7 +30,8 @@ export class Agent {
                 nickname: string = '',
                 main: boolean = false,
                 shell: string = '',
-                username: string = '') {
+                username: string = '',
+                workflows: Workflow[] = [new Workflow()]) {
         this.id = id;
         this.ip = ip;
         this.sudo_password = sudo_password;
@@ -39,6 +40,7 @@ export class Agent {
         this.main = main;
         this.shell = shell;
         this.username = username;
+        this.workflows = workflows;
     }
 
     id: number;
@@ -49,6 +51,7 @@ export class Agent {
     main: boolean;
     shell: string;
     username: string;
+    workflows: Workflow[];
 }
 
 export class Settings {

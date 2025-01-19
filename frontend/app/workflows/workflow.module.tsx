@@ -8,13 +8,11 @@ const WorkflowModule = (
     {
         agent,
         workflow,
-        setTitleAction,
         setWorkflowAction,
         setError
     }: {
         agent: Agent,
         workflow: Workflow,
-        setTitleAction: (titles: string) => void,
         setWorkflowAction: (workflow: Workflow) => void,
         setError: (error: string | null) => void
     }) => {
@@ -33,6 +31,9 @@ const WorkflowModule = (
         }
     };
 
+    const updateTitle2 = (title: string) => {
+        setWorkflowAction({...workflow, title: title});
+    }
 
     const addCardAction = () => {
         setWorkflowAction({
@@ -63,11 +64,6 @@ const WorkflowModule = (
         setWorkflowAction({...workflow, cards: updatedCards});
     };
 
-    const updateTitle = (title: string) => {
-        setTitleAction(title);
-        setWorkflowAction(workflow);
-    };
-
     const executeAllScripts = async () => {
         for (let i = 0; i < workflow.cards.length; i++) {
             await executeScript(i);
@@ -78,7 +74,7 @@ const WorkflowModule = (
         <div className={styles.main}>
             <input value={workflow.title}
                    placeholder={"Name your workflow"}
-                   onChange={(e) => updateTitle(e.target.value)}
+                   onChange={(e) => updateTitle2(e.target.value)}
                    className={styles.title}/>
             {workflow.cards.map((card: Card, index: number) => (
                 <CardModule

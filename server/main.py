@@ -26,9 +26,7 @@ def cmd():
     data = request.get_json()
     command = data['cmd']
     agent_id = data.get('agent_id', 0)
-    print("Agent ID: %s" % agent_id)
     ip = get_other_ip_or_none(agent_id)
-    print("IP: %s" % ip)
     with get_db() as conn:
         conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
         c = conn.cursor()
@@ -46,36 +44,62 @@ def cmd():
         print("Executing locally")
         return execute_command(command, sudo)
 
-@app.route("/workflows/<agent_id>", methods=['GET'], endpoint='get_workflows')
-def get_workflows(agent_id):
-    with get_db() as conn:
-        conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
+@app.route("/data", methods=['GET'], endpoint='get_data')
+def get_data():
+    with sqlite3.connect("workflows.db") as conn:
+        conn.row_factory = sqlite3.Row
         c = conn.cursor()
+
         c.execute('''
         SELECT
-            w.title AS title,
+            s.id AS settings_id,
             json_group_array(
                 json_object(
-                    'card_index', c.card_index,
-                    'script', c.script
+                    'id', a.id,
+                    'sudoPassword', a.sudo_password,
+                    'main', a.main,
+                    'nickname', a.nickname,
+                    'ip', a.ip,
+                    'os', a.os,
+                    'shell', a.shell,
+                    'username', a.username,
+                    'workflows', (
+                        SELECT json_group_array(
+                            json_object(
+                                'title', w.title,
+                                'cards', (
+                                    SELECT json_group_array(
+                                        json_object(
+                                            'cardIndex', c.card_index,
+                                            'script', c.script
+                                        )
+                                    )
+                                    FROM cards c
+                                    WHERE c.workflow_title = w.title
+                                )
+                            )
+                        )
+                        FROM workflows w
+                        WHERE w.agent_id = a.id
+                    )
                 )
-            ) AS cards
-                FROM workflows w
-                LEFT OUTER JOIN cards c ON c.workflow_title = w.title
-                WHERE w.agent_id = ?
-                GROUP BY w.title;
-                 ''', (int(agent_id),))
+            ) AS agents
+        FROM settings s
+        LEFT JOIN agents a ON a.settings_id = s.id
+        GROUP BY s.id;
+        ''')
 
-        workflows = c.fetchall()
+        row = c.fetchone()
 
-    response = []
-    for row in workflows:
-        response.append({
-            "title": row["title"],
-            "cards": json.loads(row["cards"]) if row["cards"] else []  # Deserialize JSON string
-        })
+    if not row:
+        return jsonify({"settingsId": 0, "agents": []})
 
-    return jsonify(response)  # Convert to a Flask JSON response
+    response = {
+        "settingsId": row["settings_id"],
+        "agents": json.loads(row["agents"]) if row["agents"] else []  # Deserialize JSON array
+    }
+
+    return jsonify(response)
 
 
 def get_other_ip_or_none(agent_id):
@@ -94,82 +118,41 @@ def get_other_ip_or_none(agent_id):
         return None
 
 
-@app.route("/settings", methods=['GET'], endpoint='get_settings')
-def get_settings():
-    with get_db() as conn:
-        conn.row_factory = sqlite3.Row  # Helps fetch rows as dictionaries
-        c = conn.cursor()
-        c.execute('''
-            SELECT 
-                s.id,
-                json_group_array(
-                    json_object(
-                        'id', a.id,
-                        'sudo_password', a.sudo_password,
-                        'main', a.main,
-                        'ip', a.ip,
-                        'nickname', a.nickname,
-                        'os', a.os,
-                        'shell', a.shell,
-                        'username', a.username
-                    )
-                ) AS agents
-            FROM settings s
-            INNER JOIN agents a ON a.settings_id = s.id
-            GROUP BY s.id;
-        ''')
-
-        setting_agents = c.fetchall()
-
-    response = {}
-    for row in setting_agents:
-        response['id'] = row["id"]
-        for a in json.loads(row["agents"]):
-            agent = Agent.create_from_row(a).to_dict()
-            response['agents'] = response.get('agents', []) + [agent]
-    if response == {}:
-        response = {'id': 0,
-                    'agents': [Agent.create(0, True, None, None, None, None, None).to_dict()]
-                    }
-
-    return jsonify(response)  # Convert to a Flask JSON response
-
-@app.route("/persist/workflows", methods=['POST'], endpoint='persist_workflows')
-def persist_workflows():
+@app.route("/persist/data", methods=['POST'], endpoint='persist_data')
+def persist_data():
     data = request.get_json()
-    if not data:
-        return {"error": "Invalid payload"}, 400
+    print("Data: %s" % data)
 
     with get_db() as c:
-        c.execute('DELETE FROM workflows')
-        c.execute('DELETE FROM cards')
-        for workflow in list(data):
-            c.execute('INSERT OR REPLACE INTO workflows (agent_id, title) VALUES (?, ?)',
-                      (workflow.get('agent').get('id'), workflow.get('title'),))
-            for idx, card in enumerate(workflow.get('cards')):
-                c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
-                          (workflow.get('title'), idx, card.get('script')))
-        c.commit()
-    return "OK"
-
-@app.route("/persist/settings", methods=['POST'], endpoint='persist_settings')
-def persist_settings():
-    data = request.get_json()
-    with get_db() as c:
+        # Update settings table
         c.execute('INSERT OR REPLACE INTO settings (id) VALUES (?)', (1,))
+
+        # Update agents table
         for agent in data.get('agents', []):
             c.execute('INSERT OR REPLACE INTO agents '
                       '(id, ip, settings_id, sudo_password, main, nickname, os, shell, username) VALUES '
                       '(?, ?, ?, ?, ?, ?, ?, ?, ?)',
                       (
-                            agent.get('id'),
-                            agent.get('ip', None),
-                            1,
-                            agent.get('sudo_password'),
-                            agent.get('main', agent['id'] == 0),
-                            agent.get('nickname', None),
-                            agent.get('os', None),
-                            agent.get('shell', None),
-                            agent.get('username', None)))
+                          agent.get('id'),
+                          agent.get('ip', None),
+                          1,
+                          agent.get('sudoPassword'),
+                          agent.get('main', agent['id'] == 0),
+                          agent.get('nickname', None),
+                          agent.get('os', None),
+                          agent.get('shell', None),
+                          agent.get('username', None)))
+
+            # Update workflows table
+            for workflow in agent.get('workflows', []):
+                c.execute('INSERT OR REPLACE INTO workflows (agent_id, title) VALUES (?, ?)',
+                          (agent.get('id'), workflow.get('title')))
+
+                # Update cards table
+                for idx, card in enumerate(workflow.get('cards', [])):
+                    c.execute('INSERT OR REPLACE INTO cards (workflow_title, card_index, script) VALUES (?, ?, ?)',
+                              (workflow.get('title'), idx, card.get('script')))
+
         c.commit()
+
     return "OK"

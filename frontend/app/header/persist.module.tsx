@@ -1,19 +1,19 @@
 import styles from './persist.module.css';
-import { Workflow } from '@commons/domains';
+import { Agent, Settings } from '@commons/domains';
 import { postData } from '@commons/util';
 
 export default function PersistWorkflows(
-    {   workflows,
+    {   agents,
         setError}:
-    {   workflows: Workflow[],
+    {   agents: Agent[],
         setError: (error: string | null) => void }
 ) {
-    const persistWorkflows = async () => {
-        await postData('/persist/workflows', workflows, setError);
+    const persistData = async () => {
+        await postData('/persist/data', new Settings(agents), setError);
     };
 
     return (
-        <div onClick={persistWorkflows} className={styles.icon}>
+        <div onClick={persistData} className={styles.icon}>
             {icon}
         </div>
     )
