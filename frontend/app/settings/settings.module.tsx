@@ -68,11 +68,9 @@ const SettingsModule = (
                     })}
             </div>
             <ButtonModule action={() => {
-                const newAgentId = agents.length;
-                console.log("Previous IDS: ", agents.map(a => a.id));
-                console.log("Adding new agent with id: ", newAgentId);
+                const newAgentId = agents.map(a => a.id)
+                    .reduce((a, b) => Math.max(a, b), 0) + 1; // Take the highest ID and add 1 for new ID
                 setAgents(agents.concat([new Agent(newAgentId)]));
-                console.log("After adding new agent: ", agents.map(a => a.id));
             }}
                           text={"Add Agent"}
                           style={styles.add}/>
