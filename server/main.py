@@ -15,7 +15,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 def get_db():
     if 'db' not in g:
-        db = 'file::memory:?cache=shared' if app.testing else 'workflows.db'
+        db = 'file::memory:?cache=shared' if app.testing else 'db/workflows.db'
         g.db = sqlite3.connect(db)
         with current_app.open_resource("schema.sql") as f:
             g.db.executescript(f.read().decode("utf8"))
@@ -46,7 +46,7 @@ def cmd():
 
 @app.route("/data", methods=['GET'], endpoint='get_data')
 def get_data():
-    with sqlite3.connect("workflows.db") as conn:
+    with get_db() as conn:
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
 

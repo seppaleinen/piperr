@@ -25,7 +25,7 @@ services:
     privileged: true
     volumes:
       - /:/host
-      - piperr-data:/install/
+      - piperr-data:/install/db
     ports:
       - "8000:8000"
     develop:
